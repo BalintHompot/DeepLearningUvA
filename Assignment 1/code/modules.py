@@ -8,7 +8,7 @@ class LinearModule(object):
   """
   Linear module. Applies a linear transformation to the input data. 
   """
-  def __init__(self, in_features, out_features):
+  def __init__(self, in_features, out_features, learningRate):
     """
     Initializes the parameters of the module. 
     
@@ -16,22 +16,25 @@ class LinearModule(object):
       in_features: size of each input sample
       out_features: size of each output sample
 
-    TODO:
-    Initialize weights self.params['weight'] using normal distribution with mean = 0 and 
-    std = 0.0001. Initialize biases self.params['bias'] with 0. 
-    
-    Also, initialize gradients with zeros.
+      ###
+      added learning rate as param
+
     """
+
+    ##init values
+    weights = np.random.normal(0, 0.0001,(out_features, in_features))
+    biases = np.random.normal(0,0.0001, out_features)
+
+    gradsW = np.zeros((out_features, in_features))
+    gradsB = np.zeros(out_features)
     
-    ########################
-    # PUT YOUR CODE HERE  #
-    #######################
-    self.params = {'weight': None, 'bias': None}
-    self.grads = {'weight': None, 'bias': None}
-    raise NotImplementedError
-    ########################
-    # END OF YOUR CODE    #
-    #######################
+    ##storing
+    self.params = {'weight': weights, 'bias': biases}
+    self.grads = {'weight': gradsW, 'bias': gradsB}
+    self.learningRate = learningRate
+
+    ### storing for backward pass
+    self.lastActivity = []
 
   def forward(self, x):
     """
@@ -47,14 +50,10 @@ class LinearModule(object):
     
     Hint: You can store intermediate variables inside the object. They can be used in backward pass computation.                                                           #
     """
-    
-    ########################
-    # PUT YOUR CODE HERE  #
-    #######################
-    raise NotImplementedError
-    ########################
-    # END OF YOUR CODE    #
-    #######################
+
+    out = np.dot(self.params['weight'], x) + self.params['bias']
+    self.lastActivity = out
+    self.lastInput = x
 
     return out
 
@@ -72,15 +71,21 @@ class LinearModule(object):
     layer parameters in self.grads['weight'] and self.grads['bias']. 
     """
 
-    ########################
-    # PUT YOUR CODE HERE  #
-    #######################
-    raise NotImplementedError
-    ########################
-    # END OF YOUR CODE    #
-    #######################
-    
+    upper_grads_w = np.dot(np.transpose(self.params['weight']), dout)
+    dx = np.multiply(self.derivative(self.lastInput) ,upper_grads_w)
+ 
+
+    ## weight update - adding, as we are minimizing
+    weigth_grads = np.outer(dout, self.lastInput)
+    self.params['weight'] += self.learningRate*weigth_grads
+
+    ## bias - derivative of activity is 1 w.r.t. to bias => 1*dout
+    self.params['bias'] += self.learningRate*dout
+
     return dx
+
+  def derivative(self, x):
+    return x
 
 class LeakyReLUModule(object):
   """
@@ -97,13 +102,8 @@ class LeakyReLUModule(object):
     Initialize the module.
     """
 
-    ########################
-    # PUT YOUR CODE HERE  #
-    #######################
-    raise NotImplementedError
-    ########################
-    # END OF YOUR CODE    #
-    #######################
+    self.neg_slope = neg_slope
+    self.lastActivity = []
 
   def forward(self, x):
     """
@@ -120,13 +120,8 @@ class LeakyReLUModule(object):
     Hint: You can store intermediate variables inside the object. They can be used in backward pass computation.                                                           #
     """
 
-    ########################
-    # PUT YOUR CODE HERE  #
-    #######################
-    raise NotImplementedError
-    ########################
-    # END OF YOUR CODE    #
-    #######################
+    out = np.where(x>0, x, x*self.neg_slope)
+    self.lastActivity = out
 
     return out
 
@@ -142,17 +137,12 @@ class LeakyReLUModule(object):
     TODO:
     Implement backward pass of the module.
     """
-
-    ########################
-    # PUT YOUR CODE HERE  #
-    #######################
-    raise NotImplementedError
-    ########################
-    # END OF YOUR CODE    #
-    #######################    
+    dx = np.multiply(self.derivative(self.lastActivity) , dout ) 
 
     return dx
 
+  def derivative(self,x):
+    return np.where(x>0, 1, self.neg_slope)
 
 class SoftMaxModule(object):
   """
@@ -174,13 +164,12 @@ class SoftMaxModule(object):
     Hint: You can store intermediate variables inside the object. They can be used in backward pass computation.
     """
 
-    ########################
-    # PUT YOUR CODE HERE  #
-    #######################
-    raise NotImplementedError
-    ########################
-    # END OF YOUR CODE    #
-    #######################
+    b = x.max()
+
+    out = np.exp(x - b)
+
+    out = out / out.sum()
+    self.lastActivity = out
 
     return out
 
@@ -196,15 +185,22 @@ class SoftMaxModule(object):
     Implement backward pass of the module.
     """
 
-    ########################
-    # PUT YOUR CODE HERE  #
-    #######################
-    raise NotImplementedError
-    #######################
-    # END OF YOUR CODE    #
-    #######################
+    dx = np.dot(self.derivative(self.lastActivity), dout)
 
     return dx
+
+  def derivative(self, x):
+    
+    d = []
+    for ind in range(len(x)):
+      d.append([])
+      for act in range(len(x)):
+        if ind == act:
+          d[ind].append(x[ind]*(1-x[act]))
+        else:
+          d[ind].append(x[ind]*(-x[act]))
+      
+    return d
 
 class CrossEntropyModule(object):
   """
@@ -224,13 +220,8 @@ class CrossEntropyModule(object):
     Implement forward pass of the module.
     """
 
-    ########################
-    # PUT YOUR CODE HERE  #
-    #######################
-    raise NotImplementedError
-    ########################
-    # END OF YOUR CODE    #
-    #######################
+    out = - np.dot(np.transpose(x), y)
+    self.lastActivity = out
 
     return out
 
@@ -247,12 +238,6 @@ class CrossEntropyModule(object):
     Implement backward pass of the module.
     """
 
-    ########################
-    # PUT YOUR CODE HERE  #
-    #######################
-    raise NotImplementedError
-    ########################
-    # END OF YOUR CODE    #
-    #######################
+    dx = np.divide(y, x)
 
     return dx

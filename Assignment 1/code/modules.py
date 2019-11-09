@@ -9,19 +9,10 @@ class LinearModule(object):
   Linear module. Applies a linear transformation to the input data. 
   """
   def __init__(self, in_features, out_features, learningRate):
-    """
-    Initializes the parameters of the module. 
-    
-    Args:
-      in_features: size of each input sample
-      out_features: size of each output sample
-
-      ###
-      added learning rate as param
-
-    """
 
     ##init values
+    self.in_features = in_features
+    self.out_features = out_features
     weights = np.random.normal(0, 0.0001,(out_features, in_features))
     biases = np.random.normal(0,0.0001, out_features)
 
@@ -37,19 +28,6 @@ class LinearModule(object):
     self.lastActivity = []
 
   def forward(self, x):
-    """
-    Forward pass.
-    
-    Args:
-      x: input to the module
-    Returns:
-      out: output of the module
-    
-    TODO:
-    Implement forward pass of the module. 
-    
-    Hint: You can store intermediate variables inside the object. They can be used in backward pass computation.                                                           #
-    """
 
     out = np.dot(self.params['weight'], x) + self.params['bias']
     self.lastActivity = out
@@ -58,67 +36,40 @@ class LinearModule(object):
     return out
 
   def backward(self, dout):
-    """
-    Backward pass.
+    dx = np.dot(np.transpose(self.derivative()), dout)
 
-    Args:
-      dout: gradients of the previous module
-    Returns:
-      dx: gradients with respect to the input of the module
-    
-    TODO:
-    Implement backward pass of the module. Store gradient of the loss with respect to 
-    layer parameters in self.grads['weight'] and self.grads['bias']. 
-    """
-
-    upper_grads_w = np.dot(np.transpose(self.params['weight']), dout)
-    dx = np.multiply(self.derivative(self.lastInput) ,upper_grads_w)
- 
-
-    ## weight update - adding, as we are minimizing
+    ## weight gradients - storing for update at the end of batch, called by separate function
     weigth_grads = np.outer(dout, self.lastInput)
-    self.params['weight'] += self.learningRate*weigth_grads
+    self.grads['weight'] += weigth_grads
 
     ## bias - derivative of activity is 1 w.r.t. to bias => 1*dout
-    self.params['bias'] += self.learningRate*dout
-
+    self.grads['bias'] += dout
     return dx
 
-  def derivative(self, x):
-    return x
+  def derivative(self):
+    return self.params['weight']
+
+  def update(self,batchSize):
+
+    self.params['weight'] -= self.learningRate * self.grads['weight']/batchSize
+    self.params['bias'] -= self.learningRate * self.grads['bias']/batchSize
+
+    ## resetting
+    gradsW = np.zeros((self.out_features, self.in_features))
+    gradsB = np.zeros(self.out_features)
+    self.grads = {'weight': gradsW, 'bias': gradsB}
 
 class LeakyReLUModule(object):
   """
   Leaky ReLU activation module.
   """
   def __init__(self, neg_slope):
-    """
-    Initializes the parameters of the module.
 
-    Args:
-      neg_slope: negative slope parameter.
-
-    TODO:
-    Initialize the module.
-    """
 
     self.neg_slope = neg_slope
     self.lastActivity = []
 
   def forward(self, x):
-    """
-    Forward pass.
-    
-    Args:
-      x: input to the module
-    Returns:
-      out: output of the module
-    
-    TODO:
-    Implement forward pass of the module. 
-    
-    Hint: You can store intermediate variables inside the object. They can be used in backward pass computation.                                                           #
-    """
 
     out = np.where(x>0, x, x*self.neg_slope)
     self.lastActivity = out
@@ -126,23 +77,17 @@ class LeakyReLUModule(object):
     return out
 
   def backward(self, dout):
-    """
-    Backward pass.
 
-    Args:
-      dout: gradients of the previous module
-    Returns:
-      dx: gradients with respect to the input of the module
-    
-    TODO:
-    Implement backward pass of the module.
-    """
     dx = np.multiply(self.derivative(self.lastActivity) , dout ) 
 
     return dx
 
   def derivative(self,x):
     return np.where(x>0, 1, self.neg_slope)
+  
+  def update(self,batchSize):
+    ## we don't update the relu weights
+    pass
 
 class SoftMaxModule(object):
   """
@@ -150,20 +95,8 @@ class SoftMaxModule(object):
   """
 
   def forward(self, x):
-    """
-    Forward pass.
-    Args:
-      x: input to the module
-    Returns:
-      out: output of the module
 
-    TODO:
-    Implement forward pass of the module.
-    To stabilize computation you should use the so-called Max Trick - https://timvieira.github.io/blog/post/2014/02/11/exp-normalize-trick/
-
-    Hint: You can store intermediate variables inside the object. They can be used in backward pass computation.
-    """
-
+    x = np.nan_to_num(x)
     b = x.max()
 
     out = np.exp(x - b)
@@ -174,16 +107,6 @@ class SoftMaxModule(object):
     return out
 
   def backward(self, dout):
-    """
-    Backward pass.
-    Args:
-      dout: gradients of the previous modul
-    Returns:
-      dx: gradients with respect to the input of the module
-
-    TODO:
-    Implement backward pass of the module.
-    """
 
     dx = np.dot(self.derivative(self.lastActivity), dout)
 
@@ -202,23 +125,14 @@ class SoftMaxModule(object):
       
     return d
 
+  def update(self,batchSize):
+    ## we don't update the softmax weights
+    pass
+
 class CrossEntropyModule(object):
-  """
-  Cross entropy loss module.
-  """
 
   def forward(self, x, y):
-    """
-    Forward pass.
-    Args:
-      x: input to the module
-      y: labels of the input
-    Returns:
-      out: cross entropy loss
 
-    TODO:
-    Implement forward pass of the module.
-    """
 
     out = - np.dot(np.transpose(x), y)
     self.lastActivity = out
@@ -226,18 +140,13 @@ class CrossEntropyModule(object):
     return out
 
   def backward(self, x, y):
-    """
-    Backward pass.
-    Args:
-      x: input to the module
-      y: labels of the input
-    Returns:
-      dx: gradient of the loss with the respect to the input x.
 
-    TODO:
-    Implement backward pass of the module.
-    """
-
+    ## smoothing for 0 output division
+    x[x==0] = 0.000000000001
     dx = np.divide(y, x)
 
     return dx
+  
+  def update(self,batchSize):
+    ## we don't update the crossentropy weights
+    pass

@@ -44,13 +44,13 @@ def accuracy(predictions, targets):
   Implement accuracy computation.
   """
 
-  ########################
-  # PUT YOUR CODE HERE  #
-  #######################
-  raise NotImplementedError
-  ########################
-  # END OF YOUR CODE    #
-  #######################
+  max_indices = np.argmax(predictions, 1)
+  dim = len(max_indices)
+  correct = 0
+  for instance in range(dim):
+    if targets[instance][max_indices[instance]] == 1:
+      correct += 1
+  accuracy = correct/dim
 
   return accuracy
 
@@ -77,13 +77,83 @@ def train():
   # Get negative slope parameter for LeakyReLU
   neg_slope = FLAGS.neg_slope
 
-  ########################
-  # PUT YOUR CODE HERE  #
-  #######################
-  raise NotImplementedError
-  ########################
-  # END OF YOUR CODE    #
-  #######################
+  cifar10 = cifar10_utils.get_cifar10("./cifar10/cifar-10-batches-py")
+  training_set = cifar10['train']
+  validation_set = cifar10['validation']
+  f = vars(FLAGS)
+  input_size = 3*32*32
+  number_of_classes = 10
+  batch_size = f['batch_size']
+  ### definition of architecture:
+  layers = dnn_hidden_units + [number_of_classes]
+  mlp = MLP(input_size, layers, number_of_classes, neg_slope, f['learning_rate'])
+  '''
+  ## test
+  dummy_in = [[0,2,3,1,2,3], [2,4,5,6,3,2], [0,2,3,5,5,3]]
+
+  dummy_labels = [[0,0,0,1], [0,1,0,0], [0,0,1,0]]
+  mlp = MLP(6,[3,4], 4, 0.1, 0.1)
+  
+  for i in range(1000):
+    bo = []
+    for dataInd in range(len(dummy_in)):
+      instance_data = dummy_in[dataInd]
+      instance_data = (instance_data - np.mean(instance_data))/np.amax(instance_data)
+
+      o = mlp.forward(instance_data)
+      l = mlp.loss.forward(o, dummy_labels[dataInd])
+      lg = mlp.loss.backward(o, dummy_labels[dataInd])
+      mlp.backward(lg)
+      bo.append(o)
+      #print(o)
+      #print(dummy_labels[dataInd])
+    mlp.update(len(dummy_in))
+    a = accuracy(bo, dummy_labels)
+    print(a)
+  return
+  '''
+  lastEpochNum = 0
+  epochCounter = 0
+  epoch_acc = 0
+
+  while training_set.epochs_completed <= f['max_steps']:
+    if lastEpochNum != training_set.epochs_completed:
+      
+      lastEpochNum = training_set.epochs_completed
+      
+      print("epoch " + str(lastEpochNum) + " avg accuracy: "+ str(epoch_acc/epochCounter))
+      epochCounter = 0
+      epoch_acc = 0
+
+    batch_data, batch_labels = training_set.next_batch(batch_size)
+    batch_data_flat = np.reshape(batch_data, (batch_size, input_size))
+    batch_outputs = []
+    ### looping through batch
+    for instanceIndex in range(batch_size):
+      instance_data = batch_data_flat[instanceIndex]
+      ## normalize
+      instance_data -= np.mean(instance_data)
+      instance_data /= np.amax(instance_data)
+
+      instance_label = batch_labels[instanceIndex]
+
+      ### forward pass
+      output = mlp.forward(instance_data)
+      loss = mlp.loss.forward(output, instance_label)
+      ## backward
+      loss_gradient = mlp.loss.backward(output, instance_label)
+      mlp.backward(loss_gradient)
+
+      batch_outputs.append(output)
+    
+    acc = accuracy(batch_outputs, batch_labels)
+    epoch_acc += acc
+    epochCounter += 1
+    ### training after batch
+    mlp.update(batch_size)
+    
+
+
 
 def print_flags():
   """

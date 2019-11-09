@@ -15,7 +15,7 @@ class MLP(object):
   Once initialized an MLP object can perform forward and backward.
   """
 
-  def __init__(self, n_inputs, n_hidden, n_classes, neg_slope):
+  def __init__(self, n_inputs, n_hidden, n_classes, neg_slope, learning_rate):
     """
     Initializes MLP object. 
     
@@ -35,13 +35,13 @@ class MLP(object):
     self.n_classes = n_classes
     self.neg_slope = neg_slope
     self.modules = []
-
+    
     #Init architecture
     ################# Hidden cycles ##################
     in_size = n_inputs
     for hidden_size in n_hidden:
       #Linear
-      self.modules.append(LinearModule(in_size, hidden_size, 0.001))
+      self.modules.append(LinearModule(in_size, hidden_size, learning_rate))
       #ReLU
       self.modules.append(LeakyReLUModule(neg_slope))
       in_size = hidden_size
@@ -54,18 +54,7 @@ class MLP(object):
     print('----------MLP initialized-------------')
 
   def forward(self, x):
-    """
-    Performs forward pass of the input. Here an input tensor x is transformed through 
-    several layer transformations.
-    
-    Args:
-      x: input to the network
-    Returns:
-      out: outputs of the network
-    
-    TODO:
-    Implement forward pass of the network.
-    """
+
     out = x
     for module in self.modules:
       out = module.forward(out)
@@ -73,30 +62,15 @@ class MLP(object):
 
 
   def backward(self, dout):
-    """
-    Performs backward pass given the gradients of the loss. 
-
-    Args:
-      dout: gradients of the loss
-    
-    TODO:
-    Implement backward pass of the network.
-    """
-    
     grad = dout
     for module in self.modules[::-1]:
       grad = module.backward(grad)
 
     return
 
+  def update(self, batchSize):
+    for module in self.modules:
+      module.update(batchSize)
 
-target = [0,1,0]
-mlp = MLP(5, [2,4,10,3], 10, 0.1)
-for j in range(0,1000000):
-  out = mlp.forward([1,2,3,5,5])
-  print("output is")
-  print(out)
-  loss = mlp.loss.forward(out, target)
-  lossGr = mlp.loss.backward(out, target)
+    return
 
-  mlp.backward(lossGr)

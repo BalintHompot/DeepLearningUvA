@@ -6,6 +6,12 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import torch
+import torch.optim as optim
+from torch.autograd import Variable
+from torch.utils.data import Dataset, DataLoader
+
+
 import argparse
 import numpy as np
 import os
@@ -14,7 +20,7 @@ import cifar10_utils
 
 # Default constants
 DNN_HIDDEN_UNITS_DEFAULT = '100'
-LEARNING_RATE_DEFAULT = 2e-3
+LEARNING_RATE_DEFAULT = 1
 MAX_STEPS_DEFAULT = 1500
 BATCH_SIZE_DEFAULT = 200
 EVAL_FREQ_DEFAULT = 100
@@ -43,13 +49,13 @@ def accuracy(predictions, targets):
   Implement accuracy computation.
   """
 
-  ########################
-  # PUT YOUR CODE HERE  #
-  #######################
-  raise NotImplementedError
-  ########################
-  # END OF YOUR CODE    #
-  #######################
+  max_indices = np.argmax(predictions, 1)
+  dim = len(max_indices)
+  correct = 0
+  for instance in range(dim):
+    if targets[instance][max_indices[instance]] == 1:
+      correct += 1
+  accuracy = correct/dim
 
   return accuracy
 
@@ -76,13 +82,51 @@ def train():
   # Get negative slope parameter for LeakyReLU
   neg_slope = FLAGS.neg_slope
   
-  ########################
-  # PUT YOUR CODE HERE  #
-  #######################
-  raise NotImplementedError
-  ########################
-  # END OF YOUR CODE    #
-  #######################
+  cifar10 = cifar10_utils.get_cifar10("./cifar10/cifar-10-batches-py")
+  training_set = cifar10['train']
+  validation_set = cifar10['validation']
+  f = vars(FLAGS)
+  input_size = 3*32*32
+  number_of_classes = 10
+  batch_size = f['batch_size']
+  ### definition of architecture:
+  layers =  [input_size] + dnn_hidden_units
+  mlp = MLP(input_size, layers, number_of_classes, neg_slope )
+  lastEpochNum = 0
+  epochCounter = 0
+  epoch_acc = 0
+  optimizer = optim.SGD(mlp.parameters(), lr=f['learning_rate'])
+
+
+  while training_set.epochs_completed <= f['max_steps']:
+    if lastEpochNum != training_set.epochs_completed:
+      
+      lastEpochNum = training_set.epochs_completed
+      
+      print("epoch " + str(lastEpochNum) + " avg accuracy on training data: "+ str(epoch_acc/epochCounter))
+      epochCounter = 0
+      epoch_acc = 0
+
+    batch_data, batch_labels = training_set.next_batch(batch_size)
+    batch_data_flat = np.reshape(batch_data, (batch_size, input_size))
+    ### normalize
+    batch_data_flat = np.subtract(batch_data_flat,np.mean(batch_data_flat, 0))
+    batch_data_flat = np.divide(batch_data_flat, np.amax(batch_data_flat))
+    ## transforming one-hot labels to class labels for loss function
+    batch_labels_class = np.argmax(batch_labels, 1)
+
+    X, Y = Variable(torch.Tensor(batch_data_flat)), Variable(torch.Tensor(batch_labels_class))
+    optimizer.zero_grad()
+    criterion = torch.nn.CrossEntropyLoss()
+    outputs = mlp(X)
+    loss = criterion(outputs, Y.long())
+    loss.backward()
+    optimizer.step()
+    outputs = outputs.detach()
+
+    acc = accuracy(outputs, batch_labels)
+    epoch_acc += acc
+    epochCounter += 1
 
 def print_flags():
   """

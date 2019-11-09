@@ -10,6 +10,7 @@ import torch
 from torch.autograd import Variable
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
+import numpy as np
 
 
 
@@ -52,7 +53,7 @@ class MLP(nn.Module):
     self.relu_final = nn.ReLU(n_classes)
 
     ## softmax
-    self.softmax = nn.Softmax(dim =  2)
+    self.softmax = nn.Softmax(dim =  1)
 
 
   def forward(self, x):
@@ -77,8 +78,9 @@ class MLP(nn.Module):
     out = self.softmax(out)
     return out
 
-dummydata = [[1,2,3,1,2], [2,3,4,5,6], [1,2,5,6,2]]
-dummyLabels = [1,2,0]
+dummydata = [[1,2,3,1,2], [2,3,4,5,6], [1,2,5,6,2], [1,2,5,9,2]]
+dummyLabels = [1,2,0, 2]
+
 mlp = MLP(5,[5,4], 3, 0.01)
 
 import torch.optim as optim
@@ -87,9 +89,9 @@ def criterion(out, label):
     return (label - out)**2
 
 optimizer = optim.SGD(mlp.parameters(), lr=0.001)
-
+'''
 for epoch in range(1000):
-    X, Y = Variable(torch.Tensor([dummydata])), Variable(torch.Tensor([dummyLabels]))
+    X, Y = Variable(torch.Tensor(dummydata)), Variable(torch.Tensor(dummyLabels))
     optimizer.zero_grad()
     criterion = nn.CrossEntropyLoss()
     outputs = mlp(X)
@@ -97,7 +99,10 @@ for epoch in range(1000):
     #print(outputs)
     #print("labels")
     #print(Y)
+    print(np.shape(outputs))
+    print(np.shape(Y))
     loss = criterion(outputs, Y.long())
     loss.backward()
     optimizer.step()
     print("Epoch {} - loss: {}".format(epoch, loss.data))
+'''

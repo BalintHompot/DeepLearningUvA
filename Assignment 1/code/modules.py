@@ -29,35 +29,28 @@ class LinearModule(object):
 
   def forward(self, x):
 
-    out = np.dot(self.params['weight'], x) + self.params['bias']
+    out = np.dot( x, np.transpose(self.params['weight'])) + self.params['bias']
     self.lastActivity = out
     self.lastInput = x
 
     return out
 
   def backward(self, dout):
-    dx = np.dot(np.transpose(self.derivative()), dout)
+    batchSize = np.shape(dout)[0]
+    dx = np.dot(dout, self.derivative() )
 
     ## weight gradients - storing for update at the end of batch, called by separate function
-    weigth_grads = np.outer(dout, self.lastInput)
-    self.grads['weight'] += weigth_grads
+
+    weigth_grads = np.dot(np.transpose(dout), self.lastInput)
+    self.params['weight'] += self.learningRate * (weigth_grads/batchSize)
 
     ## bias - derivative of activity is 1 w.r.t. to bias => 1*dout
-    self.grads['bias'] += dout
+    self.params['bias'] += self.learningRate * (np.sum(dout)/batchSize)
     return dx
 
   def derivative(self):
     return self.params['weight']
 
-  def update(self,batchSize):
-
-    self.params['weight'] -= self.learningRate * self.grads['weight']/batchSize
-    self.params['bias'] -= self.learningRate * self.grads['bias']/batchSize
-
-    ## resetting
-    gradsW = np.zeros((self.out_features, self.in_features))
-    gradsB = np.zeros(self.out_features)
-    self.grads = {'weight': gradsW, 'bias': gradsB}
 
 class LeakyReLUModule(object):
   """
@@ -79,15 +72,11 @@ class LeakyReLUModule(object):
   def backward(self, dout):
 
     dx = np.multiply(self.derivative(self.lastActivity) , dout ) 
-
     return dx
 
   def derivative(self,x):
     return np.where(x>0, 1, self.neg_slope)
   
-  def update(self,batchSize):
-    ## we don't update the relu weights
-    pass
 
 class SoftMaxModule(object):
   """
@@ -95,39 +84,39 @@ class SoftMaxModule(object):
   """
 
   def forward(self, x):
-
-    x = np.nan_to_num(x)
-    b = x.max()
-
-    out = np.exp(x - b)
-
-    out = out / out.sum()
+ 
+    b = np.max(x, 1)
+    sub = np.transpose(np.subtract(np.transpose(x) , b))
+    out = np.exp(sub)
+    out = np.transpose(np.divide(np.transpose(out), np.sum(out, 1)))
     self.lastActivity = out
 
     return out
 
   def backward(self, dout):
 
-    dx = np.dot(self.derivative(self.lastActivity), dout)
+    d = self.derivative(self.lastActivity)
+    dx = []
+    for instance in range(np.shape(d)[0]):
+      dx.append(np.dot(np.transpose(d[instance]), dout[instance]))
 
     return dx
 
   def derivative(self, x):
     
     d = []
-    for ind in range(len(x)):
+    for instanceInd in range(len(x)):
       d.append([])
-      for act in range(len(x)):
-        if ind == act:
-          d[ind].append(x[ind]*(1-x[act]))
-        else:
-          d[ind].append(x[ind]*(-x[act]))
-      
+      for ind in range(len(x[instanceInd])):
+        d[instanceInd].append([])
+        for act in range(len(x[instanceInd])):
+          if ind == act:
+            d[instanceInd][ind].append((x[instanceInd][ind]*(1-x[instanceInd][act])))
+          else:
+            d[instanceInd][ind].append((x[instanceInd][ind]*(-x[instanceInd][act])))
+        
     return d
 
-  def update(self,batchSize):
-    ## we don't update the softmax weights
-    pass
 
 class CrossEntropyModule(object):
 
@@ -141,12 +130,7 @@ class CrossEntropyModule(object):
 
   def backward(self, x, y):
 
-    ## smoothing for 0 output division
-    x[x==0] = 0.000000000001
-    dx = np.divide(y, x)
-
+    x[x<=0.00001] = 0.00001
+    dx = np.divide(y  , x )
     return dx
   
-  def update(self,batchSize):
-    ## we don't update the crossentropy weights
-    pass

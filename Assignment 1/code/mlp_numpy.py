@@ -65,12 +65,6 @@ class MLP(object):
     grad = dout
     for module in self.modules[::-1]:
       grad = module.backward(grad)
-
     return
 
-  def update(self, batchSize):
-    for module in self.modules:
-      module.update(batchSize)
-
-    return
 

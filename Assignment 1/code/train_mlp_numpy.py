@@ -15,7 +15,7 @@ import cifar10_utils
 
 # Default constants
 DNN_HIDDEN_UNITS_DEFAULT = '100'
-LEARNING_RATE_DEFAULT = 2e-3
+LEARNING_RATE_DEFAULT = 1
 MAX_STEPS_DEFAULT = 1500
 BATCH_SIZE_DEFAULT = 200
 EVAL_FREQ_DEFAULT = 100
@@ -94,21 +94,21 @@ def train():
   dummy_labels = [[0,0,0,1], [0,1,0,0], [0,0,1,0]]
   mlp = MLP(6,[3,4], 4, 0.1, 0.1)
   
-  for i in range(1000):
-    bo = []
-    for dataInd in range(len(dummy_in)):
-      instance_data = dummy_in[dataInd]
-      instance_data = (instance_data - np.mean(instance_data))/np.amax(instance_data)
-
-      o = mlp.forward(instance_data)
-      l = mlp.loss.forward(o, dummy_labels[dataInd])
-      lg = mlp.loss.backward(o, dummy_labels[dataInd])
-      mlp.backward(lg)
-      bo.append(o)
-      #print(o)
-      #print(dummy_labels[dataInd])
-    mlp.update(len(dummy_in))
-    a = accuracy(bo, dummy_labels)
+  for i in range(10):
+    o = mlp.forward(dummy_in)
+    l = mlp.loss.forward(o, dummy_labels)
+    lg = mlp.loss.backward(o, dummy_labels)   
+    print("labels")
+    print(dummy_labels[0]) 
+    print("output")
+    print(o[0])
+    #print("expected out grad")
+    #print(np.subtract(o, dummy_labels)[0])
+    mlp.backward(lg)
+    print("----")
+    #print(o)
+    #print(dummy_labels[dataInd])
+    a = accuracy(o, dummy_labels)
     print(a)
   return
   '''
@@ -127,30 +127,21 @@ def train():
 
     batch_data, batch_labels = training_set.next_batch(batch_size)
     batch_data_flat = np.reshape(batch_data, (batch_size, input_size))
-    batch_outputs = []
-    ### looping through batch
-    for instanceIndex in range(batch_size):
-      instance_data = batch_data_flat[instanceIndex]
-      ## normalize
-      instance_data -= np.mean(instance_data)
-      instance_data /= np.amax(instance_data)
+    ### normalize
+    batch_data_flat = np.subtract(batch_data_flat,np.mean(batch_data_flat, 0))
+    batch_data_flat = np.divide(batch_data_flat, np.amax(batch_data_flat))
 
-      instance_label = batch_labels[instanceIndex]
+    ### forward pass
+    output = mlp.forward(batch_data_flat)
+    loss = mlp.loss.forward(output, batch_labels)
+    ## backward
+    loss_gradient = mlp.loss.backward(output, batch_labels)
+    mlp.backward(loss_gradient)
 
-      ### forward pass
-      output = mlp.forward(instance_data)
-      loss = mlp.loss.forward(output, instance_label)
-      ## backward
-      loss_gradient = mlp.loss.backward(output, instance_label)
-      mlp.backward(loss_gradient)
-
-      batch_outputs.append(output)
-    
-    acc = accuracy(batch_outputs, batch_labels)
+    acc = accuracy(output, batch_labels)
     epoch_acc += acc
     epochCounter += 1
-    ### training after batch
-    mlp.update(batch_size)
+
     
 
 

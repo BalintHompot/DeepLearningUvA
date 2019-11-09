@@ -87,31 +87,6 @@ def train():
   ### definition of architecture:
   layers = dnn_hidden_units + [number_of_classes]
   mlp = MLP(input_size, layers, number_of_classes, neg_slope, f['learning_rate'])
-  '''
-  ## test
-  dummy_in = [[0,2,3,1,2,3], [2,4,5,6,3,2], [0,2,3,5,5,3]]
-
-  dummy_labels = [[0,0,0,1], [0,1,0,0], [0,0,1,0]]
-  mlp = MLP(6,[3,4], 4, 0.1, 0.1)
-  
-  for i in range(10):
-    o = mlp.forward(dummy_in)
-    l = mlp.loss.forward(o, dummy_labels)
-    lg = mlp.loss.backward(o, dummy_labels)   
-    print("labels")
-    print(dummy_labels[0]) 
-    print("output")
-    print(o[0])
-    #print("expected out grad")
-    #print(np.subtract(o, dummy_labels)[0])
-    mlp.backward(lg)
-    print("----")
-    #print(o)
-    #print(dummy_labels[dataInd])
-    a = accuracy(o, dummy_labels)
-    print(a)
-  return
-  '''
   lastEpochNum = 0
   epochCounter = 0
   epoch_acc = 0
@@ -121,7 +96,7 @@ def train():
       
       lastEpochNum = training_set.epochs_completed
       
-      print("epoch " + str(lastEpochNum) + " avg accuracy: "+ str(epoch_acc/epochCounter))
+      print("epoch " + str(lastEpochNum) + " avg accuracy on training data: "+ str(epoch_acc/epochCounter))
       epochCounter = 0
       epoch_acc = 0
 

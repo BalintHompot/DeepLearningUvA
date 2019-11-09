@@ -6,6 +6,13 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import torch
+from torch.autograd import Variable
+import torch.nn as nn
+from torch.utils.data import Dataset, DataLoader
+
+
+
 class MLP(nn.Module):
   """
   This class implements a Multi-layer Perceptron in PyTorch.
@@ -32,13 +39,21 @@ class MLP(nn.Module):
     Implement initialization of the network.
     """
 
-    ########################
-    # PUT YOUR CODE HERE  #
-    #######################
-    raise NotImplementedError
-    ########################
-    # END OF YOUR CODE    #
-    #######################
+    super(MLP, self).__init__()
+    self.layers = []
+    self.relus = []
+    input_size = n_inputs
+    for layerSize in n_hidden:
+      self.layers.append(nn.Linear(input_size,layerSize))
+      self.relus.append(nn.ReLU(layerSize))
+
+    ## to dimension of classes
+    self.linear_final = nn.Linear(layerSize,n_classes)
+    self.relu_final = nn.ReLU(n_classes)
+
+    ## softmax
+    self.softmax = nn.Softmax(dim =  2)
+
 
   def forward(self, x):
     """
@@ -53,13 +68,36 @@ class MLP(nn.Module):
     TODO:
     Implement forward pass of the network.
     """
+    out = x
+    for layerInd in range(len(self.layers)):
+      out = self.layers[layerInd](out)
+      out = self.relus[layerInd](out)
 
-    ########################
-    # PUT YOUR CODE HERE  #
-    #######################
-    raise NotImplementedError
-    ########################
-    # END OF YOUR CODE    #
-    #######################
-
+    out = self.relu_final(self.linear_final(out))
+    out = self.softmax(out)
     return out
+
+dummydata = [[1,2,3,1,2], [2,3,4,5,6], [1,2,5,6,2]]
+dummyLabels = [1,2,0]
+mlp = MLP(5,[5,4], 3, 0.01)
+
+import torch.optim as optim
+
+def criterion(out, label):
+    return (label - out)**2
+
+optimizer = optim.SGD(mlp.parameters(), lr=0.001)
+
+for epoch in range(1000):
+    X, Y = Variable(torch.Tensor([dummydata])), Variable(torch.Tensor([dummyLabels]))
+    optimizer.zero_grad()
+    criterion = nn.CrossEntropyLoss()
+    outputs = mlp(X)
+    #print("outputs")
+    #print(outputs)
+    #print("labels")
+    #print(Y)
+    loss = criterion(outputs, Y.long())
+    loss.backward()
+    optimizer.step()
+    print("Epoch {} - loss: {}".format(epoch, loss.data))

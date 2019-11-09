@@ -8,34 +8,27 @@
 \f0\fs24 \cf0 I define the gradients backwards, starting at the cross entropy loss. The gradients are expressed for scalars, from which we can generalise for tensors.\
 \\begin\{center\}\
 	$\\frac\{\\partial L\}\{\\partial x_\{i\}^\{N\}\} = $ \\\\\
-\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
-\cf0 	$\\frac\{\\partial \}\{\\partial x_\{i\}^\{N\}\} -\\Sigma_\{i\}t_\{i\}logx_\{i\}^\{N\}= $ \\\\\
+	$\\frac\{\\partial \}\{\\partial x_\{i\}^\{N\}\} -\\Sigma_\{i\}t_\{i\}logx_\{i\}^\{N\}= $ \\\\\
 	$\\frac\{t_\{i\}\}\{x_\{i\}^\{N\}\}\
 	\
-\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
-\cf0 \\end\{center\}\
+\\end\{center\}\
 For the softmax we have:\
 \\begin\{center\}\
 	$\\frac\{\\partial x^\{N\}\}\{\\partial x!hat!_\{I\}^\{N\}\} = $ \\\\\
 \
 \\end\{center\}\
-\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
-\cf0 For the following layers I denote l<N as h. \
-\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
-\cf0 For the leaky Relu:\
-\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
-\cf0 \\begin\{center\}\
+For the following layers I denote l<N as h. \
+For the leaky Relu:\
+\\begin\{center\}\
 	$\\frac\{\\partial x^\{h\}\}\{\\partial x!hat!_\{i\}^\{h\}\} = $ \\\\\
 	$\\frac\{\\partial\}\{\\partial x!hat!_\{i\}^\{h\}\}max(x!hat!_\{i\}^\{h\}, 0) + a*min(x!hat!_\{i\}^\{h\}, 0 )= $ \\\\\
 	$max(1, 0) + a * min(1, 0)\
 \
 \\end\{center\}\
 So the derivative is either 0 or 1.\
-\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
-\cf0 \
+\
 For the hidden layers we calculate the gradients w.r.t. the input\
-\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
-\cf0 \\begin\{center\}\
+\\begin\{center\}\
 	$\\frac\{\\partial x!hat!^\{h\}\}\{\\partial x_\{i\}^\{h-1\}\} = $ \\\\\
 	$\\frac\{\\partial \}\{\\partial x_\{i-1\}^\{h-1\}\}\\Wx + b = $ \\\\\
 	$x_\{i\}^\{h-1\}$\

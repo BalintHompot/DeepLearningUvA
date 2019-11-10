@@ -41,7 +41,10 @@ def accuracy(predictions, targets):
     labels: 2D int array of size [batch_size, n_classes]
             with one-hot encoding. Ground truth labels for
             each sample in the batch
-  Returns:
+  wget http://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz
+tar -xzvf cifar-10-python.tar.gz
+rm cifar-10-python.tar.gz 
+Returns:
     accuracy: scalar float, the accuracy of predictions,
               i.e. the average correct predictions over the whole batch
   

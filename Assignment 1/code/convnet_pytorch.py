@@ -6,6 +6,19 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import torch
+import torch.nn as nn
+
+## custom flatten layer for simpler architecture
+class Flatten(nn.Module):
+    def __init__(self, size):
+      super(Flatten, self).__init__()
+      self.size = size
+
+    def forward(self, x):        
+      x = x.view(-1, self.size)
+      return x
+
 class ConvNet(nn.Module):
   """
   This class implements a Convolutional Neural Network in PyTorch.
@@ -25,14 +38,33 @@ class ConvNet(nn.Module):
     TODO:
     Implement initialization of the network.
     """
+    super(ConvNet, self).__init__()
 
-    ########################
-    # PUT YOUR CODE HERE  #
-    #######################
-    raise NotImplementedError
-    ########################
-    # END OF YOUR CODE    #
-    #######################
+    ## setting the layer list as model params
+    self.layers = nn.ModuleList()
+
+    
+    self.layers.append(nn.Conv2d(n_channels, 64, 3, 1, 1).cuda())
+    self.layers.append(nn.MaxPool2d(3, 2, 1).cuda())   
+    self.layers.append(nn.Conv2d(64, 128, 3, 1, 1).cuda())
+    self.layers.append(nn.MaxPool2d(3, 2, 1).cuda())  
+    self.layers.append(nn.Conv2d(128, 256, 3, 1, 1).cuda())
+    self.layers.append(nn.Conv2d(256, 256, 3, 1, 1).cuda())
+    self.layers.append(nn.MaxPool2d(3, 2, 1).cuda())  
+    self.layers.append(nn.Conv2d(256, 512, 3, 1, 1).cuda())
+    self.layers.append(nn.Conv2d(512, 512, 3, 1, 1).cuda())
+    self.layers.append(nn.MaxPool2d(3, 2, 1).cuda())  
+    self.layers.append(nn.Conv2d(512, 512, 3, 1, 1).cuda())
+    self.layers.append(nn.Conv2d(512, 512, 3, 1, 1).cuda())
+    self.layers.append(nn.MaxPool2d(3, 2, 1).cuda())  
+
+    ## linear
+    self.layers.append(Flatten(512).cuda())
+    self.layers.append(nn.Linear(512,n_classes).cuda())
+    
+    ## softmax
+    self.layers.append(nn.Softmax(dim =  1).cuda())
+
 
   def forward(self, x):
     """
@@ -47,13 +79,9 @@ class ConvNet(nn.Module):
     TODO:
     Implement forward pass of the network.
     """
+    out = x
+    for layer in self.layers:
+      out = layer(out)
 
-    ########################
-    # PUT YOUR CODE HERE  #
-    #######################
-    raise NotImplementedError
-    ########################
-    # END OF YOUR CODE    #
-    #######################
 
     return out

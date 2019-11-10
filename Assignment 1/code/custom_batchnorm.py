@@ -35,8 +35,9 @@ class CustomBatchNormAutograd(nn.Module):
     super(CustomBatchNormAutograd, self).__init__()
 
     self.smoothing = eps
-    self.gamma = nn.Parameter(0.1)
-    self.beta = nn.Parameter(0.1)
+    self.n_neurons = n_neurons
+    self.gamma = nn.Parameter(torch.empty(n_neurons).normal_(mean=0,std=0.0001))
+    self.beta = nn.Parameter(torch.empty(n_neurons).normal_(mean=0,std=0.0001))
 
   def forward(self, input):
     """
@@ -52,15 +53,22 @@ class CustomBatchNormAutograd(nn.Module):
       Implement batch normalization forward pass as given in the assignment.
       For the case that you make use of torch.var be aware that the flag unbiased=False should be set.
     """
+    ## dimension check
+    if input.shape[1] == self.n_neurons:
 
-    mu = np.mean(input, 0)
-    var = np.var(input, 0)
+      mu = torch.mean(input, 0)
+      
+      var = torch.var(input, 0)
 
-    input = np.subtract(input, mu)
-    input = np.divide(input, np.sqrt(np.square(var)+self.smoothing))
-    out = self.gamma * input + self.beta
+      input = input - mu
+      input = input / torch.sqrt(var * var +self.smoothing)
+      out = self.gamma * input + self.beta
 
-    return out
+      return out
+
+    else:
+      print("input shape is incorrect in batch norm module")
+      return
 
 
 

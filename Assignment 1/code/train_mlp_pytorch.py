@@ -106,8 +106,6 @@ def train():
 
   ## preparing test data
   test_data, test_labels = test_set.images, test_set.labels
-  print(np.shape(test_data))
-  print(np.shape(test_labels))
   test_data_flat = np.reshape(test_data, (np.shape(test_data)[0], input_size))
   ### normalize
   test_data_flat = np.subtract(test_data_flat,np.mean(test_data_flat, 0))

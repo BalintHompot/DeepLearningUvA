@@ -34,13 +34,9 @@ class CustomBatchNormAutograd(nn.Module):
     """
     super(CustomBatchNormAutograd, self).__init__()
 
-    ########################
-    # PUT YOUR CODE HERE  #
-    #######################
-
-    ########################
-    # END OF YOUR CODE    #
-    #######################
+    self.smoothing = eps
+    self.gamma = nn.Parameter(0.1)
+    self.beta = nn.Parameter(0.1)
 
   def forward(self, input):
     """
@@ -57,13 +53,12 @@ class CustomBatchNormAutograd(nn.Module):
       For the case that you make use of torch.var be aware that the flag unbiased=False should be set.
     """
 
-    ########################
-    # PUT YOUR CODE HERE  #
-    #######################
+    mu = np.mean(input, 0)
+    var = np.var(input, 0)
 
-    ########################
-    # END OF YOUR CODE    #
-    #######################
+    input = np.subtract(input, mu)
+    input = np.divide(input, np.sqrt(np.square(var)+self.smoothing))
+    out = self.gamma * input + self.beta
 
     return out
 
@@ -229,6 +224,7 @@ if __name__=='__main__':
     y_auto = bn_auto(x)
     print('\tmeans={}\n\tvars={}'.format(y_auto.mean(dim=0).data, y_auto.var(dim=0).data))
 
+    exit()
     # test CustomBatchNormManualFunction
     # this is recommended to be done in double precision
     print('3.2 b) Test functional version')

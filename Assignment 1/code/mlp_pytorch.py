@@ -41,19 +41,22 @@ class MLP(nn.Module):
     """
 
     super(MLP, self).__init__()
-    self.layers = []
-    self.relus = []
+
+    ## setting the layer list as model params
+    self.layers = nn.ModuleList()
+
     input_size = n_inputs
     for layerSize in n_hidden:
-      self.layers.append(nn.Linear(input_size,layerSize))
-      self.relus.append(nn.ReLU(layerSize))
+      self.layers.append(nn.Linear(input_size,layerSize).cuda())
+      self.layers.append(nn.LeakyReLU(neg_slope).cuda())
 
     ## to dimension of classes
-    self.linear_final = nn.Linear(layerSize,n_classes)
-    self.relu_final = nn.ReLU(n_classes)
+    self.layers.append(nn.Linear(layerSize,n_classes).cuda())
+    self.layers.append(nn.LeakyReLU(neg_slope).cuda())
 
     ## softmax
-    self.softmax = nn.Softmax(dim =  1)
+    self.layers.append(nn.Softmax(dim =  1).cuda())
+
 
 
   def forward(self, x):
@@ -70,39 +73,9 @@ class MLP(nn.Module):
     Implement forward pass of the network.
     """
     out = x
-    for layerInd in range(len(self.layers)):
-      out = self.layers[layerInd](out)
-      out = self.relus[layerInd](out)
 
-    out = self.relu_final(self.linear_final(out))
-    out = self.softmax(out)
+    for layer in self.layers:
+      out = layer(out)
+
+
     return out
-
-dummydata = [[1,2,3,1,2], [2,3,4,5,6], [1,2,5,6,2], [1,2,5,9,2]]
-dummyLabels = [1,2,0, 2]
-
-mlp = MLP(5,[5,4], 3, 0.01)
-
-import torch.optim as optim
-
-def criterion(out, label):
-    return (label - out)**2
-
-optimizer = optim.SGD(mlp.parameters(), lr=0.001)
-'''
-for epoch in range(1000):
-    X, Y = Variable(torch.Tensor(dummydata)), Variable(torch.Tensor(dummyLabels))
-    optimizer.zero_grad()
-    criterion = nn.CrossEntropyLoss()
-    outputs = mlp(X)
-    #print("outputs")
-    #print(outputs)
-    #print("labels")
-    #print(Y)
-    print(np.shape(outputs))
-    print(np.shape(Y))
-    loss = criterion(outputs, Y.long())
-    loss.backward()
-    optimizer.step()
-    print("Epoch {} - loss: {}".format(epoch, loss.data))
-'''

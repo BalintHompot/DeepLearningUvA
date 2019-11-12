@@ -43,39 +43,70 @@ class ConvNet(nn.Module):
     ## setting the layer list as model params
     self.layers = nn.ModuleList()
 
-    
-    self.layers.append(nn.Conv2d(n_channels, 64, 3, 1, 1).cuda())
-    self.layers.append(nn.ReLU().cuda())
-    self.layers.append(nn.MaxPool2d(3, 2, 1).cuda())   
+    ## if cuda installed
+    if torch.cuda.is_available():
+      self.layers.append(nn.Conv2d(n_channels, 64, 3, 1, 1).cuda())
+      self.layers.append(nn.ReLU().cuda())
+      self.layers.append(nn.MaxPool2d(3, 2, 1).cuda())   
 
-    self.layers.append(nn.Conv2d(64, 128, 3, 1, 1).cuda())
-    self.layers.append(nn.ReLU().cuda())
-    self.layers.append(nn.MaxPool2d(3, 2, 1).cuda())  
+      self.layers.append(nn.Conv2d(64, 128, 3, 1, 1).cuda())
+      self.layers.append(nn.ReLU().cuda())
+      self.layers.append(nn.MaxPool2d(3, 2, 1).cuda())  
 
-    self.layers.append(nn.Conv2d(128, 256, 3, 1, 1).cuda())
-    self.layers.append(nn.ReLU().cuda())
-    self.layers.append(nn.Conv2d(256, 256, 3, 1, 1).cuda())
-    self.layers.append(nn.ReLU().cuda())
-    self.layers.append(nn.MaxPool2d(3, 2, 1).cuda())  
+      self.layers.append(nn.Conv2d(128, 256, 3, 1, 1).cuda())
+      self.layers.append(nn.ReLU().cuda())
+      self.layers.append(nn.Conv2d(256, 256, 3, 1, 1).cuda())
+      self.layers.append(nn.ReLU().cuda())
+      self.layers.append(nn.MaxPool2d(3, 2, 1).cuda())  
 
-    self.layers.append(nn.Conv2d(256, 512, 3, 1, 1).cuda())
-    self.layers.append(nn.ReLU().cuda())
-    self.layers.append(nn.Conv2d(512, 512, 3, 1, 1).cuda())
-    self.layers.append(nn.ReLU().cuda())
-    self.layers.append(nn.MaxPool2d(3, 2, 1).cuda())  
+      self.layers.append(nn.Conv2d(256, 512, 3, 1, 1).cuda())
+      self.layers.append(nn.ReLU().cuda())
+      self.layers.append(nn.Conv2d(512, 512, 3, 1, 1).cuda())
+      self.layers.append(nn.ReLU().cuda())
+      self.layers.append(nn.MaxPool2d(3, 2, 1).cuda())  
 
-    self.layers.append(nn.Conv2d(512, 512, 3, 1, 1).cuda())
-    self.layers.append(nn.ReLU().cuda())
-    self.layers.append(nn.Conv2d(512, 512, 3, 1, 1).cuda())
-    self.layers.append(nn.ReLU().cuda())
-    self.layers.append(nn.MaxPool2d(3, 2, 1).cuda())  
+      self.layers.append(nn.Conv2d(512, 512, 3, 1, 1).cuda())
+      self.layers.append(nn.ReLU().cuda())
+      self.layers.append(nn.Conv2d(512, 512, 3, 1, 1).cuda())
+      self.layers.append(nn.ReLU().cuda())
+      self.layers.append(nn.MaxPool2d(3, 2, 1).cuda())  
 
-    ## fully connected
-    self.layers.append(Flatten(512).cuda())
-    self.layers.append(nn.Linear(512,n_classes).cuda())
-    self.layers.append(nn.ReLU().cuda())
-    
+      ## fully connected
+      self.layers.append(Flatten(512).cuda())
+      self.layers.append(nn.Linear(512,n_classes).cuda())
+      self.layers.append(nn.ReLU().cuda())
+    # if no cuda
+    else:
+      self.layers.append(nn.Conv2d(n_channels, 64, 3, 1, 1))
+      self.layers.append(nn.ReLU())
+      self.layers.append(nn.MaxPool2d(3, 2, 1))   
 
+      self.layers.append(nn.Conv2d(64, 128, 3, 1, 1))
+      self.layers.append(nn.ReLU().cuda())
+      self.layers.append(nn.MaxPool2d(3, 2, 1))  
+
+      self.layers.append(nn.Conv2d(128, 256, 3, 1, 1))
+      self.layers.append(nn.ReLU().cuda())
+      self.layers.append(nn.Conv2d(256, 256, 3, 1, 1))
+      self.layers.append(nn.ReLU())
+      self.layers.append(nn.MaxPool2d(3, 2, 1))  
+
+      self.layers.append(nn.Conv2d(256, 512, 3, 1, 1))
+      self.layers.append(nn.ReLU())
+      self.layers.append(nn.Conv2d(512, 512, 3, 1, 1))
+      self.layers.append(nn.ReLU())
+      self.layers.append(nn.MaxPool2d(3, 2, 1))  
+
+      self.layers.append(nn.Conv2d(512, 512, 3, 1, 1))
+      self.layers.append(nn.ReLU())
+      self.layers.append(nn.Conv2d(512, 512, 3, 1, 1))
+      self.layers.append(nn.ReLU())
+      self.layers.append(nn.MaxPool2d(3, 2, 1))  
+
+      ## fully connected
+      self.layers.append(Flatten(512))
+      self.layers.append(nn.Linear(512,n_classes))
+      self.layers.append(nn.ReLU())
 
   def forward(self, x):
     """

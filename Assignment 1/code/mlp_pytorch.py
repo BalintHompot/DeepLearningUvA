@@ -42,20 +42,28 @@ class MLP(nn.Module):
 
     super(MLP, self).__init__()
 
-    ## setting the layer list as model params
+    ## setting the layer list as model params 
     self.layers = nn.ModuleList()
-
     input_size = n_inputs
-    for layerSize in n_hidden:
-      self.layers.append(nn.Linear(input_size,layerSize).cuda())
+
+
+    ### setting if cuda is available
+    if torch.cuda.is_available():
+      for layerSize in n_hidden:
+        self.layers.append(nn.Linear(input_size,layerSize).cuda())
+        self.layers.append(nn.LeakyReLU(neg_slope).cuda())
+
+      ## to dimension of classes
+      self.layers.append(nn.Linear(layerSize,n_classes).cuda())
       self.layers.append(nn.LeakyReLU(neg_slope).cuda())
+    else:
+      for layerSize in n_hidden:
+        self.layers.append(nn.Linear(input_size,layerSize))
+        self.layers.append(nn.LeakyReLU(neg_slope))
 
-    ## to dimension of classes
-    self.layers.append(nn.Linear(layerSize,n_classes).cuda())
-    self.layers.append(nn.LeakyReLU(neg_slope).cuda())
-
-
-
+      ## to dimension of classes
+      self.layers.append(nn.Linear(layerSize,n_classes))
+      self.layers.append(nn.LeakyReLU(neg_slope))
 
 
   def forward(self, x):

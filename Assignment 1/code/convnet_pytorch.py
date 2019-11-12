@@ -45,25 +45,36 @@ class ConvNet(nn.Module):
 
     
     self.layers.append(nn.Conv2d(n_channels, 64, 3, 1, 1).cuda())
+    self.layers.append(nn.ReLU().cuda())
     self.layers.append(nn.MaxPool2d(3, 2, 1).cuda())   
+
     self.layers.append(nn.Conv2d(64, 128, 3, 1, 1).cuda())
-    self.layers.append(nn.MaxPool2d(3, 2, 1).cuda())  
-    self.layers.append(nn.Conv2d(128, 256, 3, 1, 1).cuda())
-    self.layers.append(nn.Conv2d(256, 256, 3, 1, 1).cuda())
-    self.layers.append(nn.MaxPool2d(3, 2, 1).cuda())  
-    self.layers.append(nn.Conv2d(256, 512, 3, 1, 1).cuda())
-    self.layers.append(nn.Conv2d(512, 512, 3, 1, 1).cuda())
-    self.layers.append(nn.MaxPool2d(3, 2, 1).cuda())  
-    self.layers.append(nn.Conv2d(512, 512, 3, 1, 1).cuda())
-    self.layers.append(nn.Conv2d(512, 512, 3, 1, 1).cuda())
+    self.layers.append(nn.ReLU().cuda())
     self.layers.append(nn.MaxPool2d(3, 2, 1).cuda())  
 
-    ## linear
+    self.layers.append(nn.Conv2d(128, 256, 3, 1, 1).cuda())
+    self.layers.append(nn.ReLU().cuda())
+    self.layers.append(nn.Conv2d(256, 256, 3, 1, 1).cuda())
+    self.layers.append(nn.ReLU().cuda())
+    self.layers.append(nn.MaxPool2d(3, 2, 1).cuda())  
+
+    self.layers.append(nn.Conv2d(256, 512, 3, 1, 1).cuda())
+    self.layers.append(nn.ReLU().cuda())
+    self.layers.append(nn.Conv2d(512, 512, 3, 1, 1).cuda())
+    self.layers.append(nn.ReLU().cuda())
+    self.layers.append(nn.MaxPool2d(3, 2, 1).cuda())  
+
+    self.layers.append(nn.Conv2d(512, 512, 3, 1, 1).cuda())
+    self.layers.append(nn.ReLU().cuda())
+    self.layers.append(nn.Conv2d(512, 512, 3, 1, 1).cuda())
+    self.layers.append(nn.ReLU().cuda())
+    self.layers.append(nn.MaxPool2d(3, 2, 1).cuda())  
+
+    ## fully connected
     self.layers.append(Flatten(512).cuda())
     self.layers.append(nn.Linear(512,n_classes).cuda())
+    self.layers.append(nn.ReLU().cuda())
     
-    ## softmax
-    self.layers.append(nn.Softmax(dim =  1).cuda())
 
 
   def forward(self, x):

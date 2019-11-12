@@ -90,8 +90,8 @@ def train():
   ## preparing test data
   test_data, test_labels = test_set.images, test_set.labels
   ### normalize
-  #test_data_flat = np.subtract(test_data_flat,np.mean(test_data_flat, 0))
-  #test_data_flat = np.divide(test_data_flat, np.amax(test_data_flat))
+  test_data = np.subtract(test_data,np.mean(test_data, 0))
+  test_data = np.divide(test_data, np.amax(test_data, 0))
   ## transforming one-hot labels to class labels for loss function
   test_labels_class = np.argmax(test_labels, 1)
 
@@ -121,13 +121,13 @@ def train():
       print("test accuracy: " + str(test_acc))
       print("-----------------------")
     '''
-    
+
     ## fetching batch and training
     batch_data, batch_labels = training_set.next_batch(batch_size)
     #batch_data_flat = np.reshape(batch_data, (batch_size, input_size))
     ### normalize
-    #batch_data_flat = np.subtract(batch_data_flat,np.mean(batch_data_flat, 0))
-    #batch_data_flat = np.divide(batch_data_flat, np.amax(batch_data_flat))
+    batch_data = np.subtract(batch_data,np.mean(batch_data, 0))
+    batch_data = np.divide(batch_data, np.amax(batch_data, 0))
     ## transforming one-hot labels to class labels for loss function
     batch_labels_class = np.argmax(batch_labels, 1)
 

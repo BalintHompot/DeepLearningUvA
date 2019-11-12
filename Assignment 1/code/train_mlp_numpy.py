@@ -104,7 +104,7 @@ def train():
     batch_data_flat = np.reshape(batch_data, (batch_size, input_size))
     ### normalize
     batch_data_flat = np.subtract(batch_data_flat,np.mean(batch_data_flat, 0))
-    batch_data_flat = np.divide(batch_data_flat, np.amax(batch_data_flat))
+    batch_data_flat = np.divide(batch_data_flat, np.amax(batch_data_flat, 0))
 
     ### forward pass
     output = mlp.forward(batch_data_flat)

@@ -54,8 +54,7 @@ class MLP(nn.Module):
     self.layers.append(nn.Linear(layerSize,n_classes).cuda())
     self.layers.append(nn.LeakyReLU(neg_slope).cuda())
 
-    ## softmax
-    self.layers.append(nn.Softmax(dim =  1).cuda())
+
 
 
 

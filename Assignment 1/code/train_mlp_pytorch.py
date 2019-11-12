@@ -109,7 +109,7 @@ def train():
   test_data_flat = np.reshape(test_data, (np.shape(test_data)[0], input_size))
   ### normalize
   test_data_flat = np.subtract(test_data_flat,np.mean(test_data_flat, 0))
-  test_data_flat = np.divide(test_data_flat, np.amax(test_data_flat))
+  test_data_flat = np.divide(test_data_flat, np.amax(test_data_flat, 0))
   ## transforming one-hot labels to class labels for loss function
   test_labels_class = np.argmax(test_labels, 1)
 
@@ -142,7 +142,7 @@ def train():
     batch_data_flat = np.reshape(batch_data, (batch_size, input_size))
     ### normalize
     batch_data_flat = np.subtract(batch_data_flat,np.mean(batch_data_flat, 0))
-    batch_data_flat = np.divide(batch_data_flat, np.amax(batch_data_flat))
+    batch_data_flat = np.divide(batch_data_flat, np.amax(batch_data_flat, 0))
     ## transforming one-hot labels to class labels for loss function
     batch_labels_class = np.argmax(batch_labels, 1)
 

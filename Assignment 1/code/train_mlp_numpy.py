@@ -12,6 +12,7 @@ import os
 from mlp_numpy import MLP
 from modules import CrossEntropyModule
 import cifar10_utils
+from accuracies import drawPlot, accuracy
 
 # Default constants
 DNN_HIDDEN_UNITS_DEFAULT = '100'
@@ -26,33 +27,6 @@ DATA_DIR_DEFAULT = './cifar10/cifar-10-batches-py'
 
 FLAGS = None
 
-def accuracy(predictions, targets):
-  """
-  Computes the prediction accuracy, i.e. the average of correct predictions
-  of the network.
-  
-  Args:
-    predictions: 2D float array of size [batch_size, n_classes]
-    labels: 2D int array of size [batch_size, n_classes]
-            with one-hot encoding. Ground truth labels for
-            each sample in the batch
-  Returns:
-    accuracy: scalar float, the accuracy of predictions,
-              i.e. the average correct predictions over the whole batch
-  
-  TODO:
-  Implement accuracy computation.
-  """
-
-  max_indices = np.argmax(predictions, 1)
-  dim = len(max_indices)
-  correct = 0
-  for instance in range(dim):
-    if targets[instance][max_indices[instance]] == 1:
-      correct += 1
-  accuracy = correct/dim
-
-  return accuracy
 
 def train():
   """

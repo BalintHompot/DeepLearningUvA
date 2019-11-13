@@ -61,7 +61,7 @@ class CustomBatchNormAutograd(nn.Module):
       var = torch.var(input, 0, unbiased=False)
 
       input = input - mu
-      input = input / torch.sqrt(var * var +self.smoothing)
+      input = input / torch.sqrt(var +self.smoothing)
       out = self.gamma * input + self.beta
 
       return out
@@ -116,7 +116,7 @@ class CustomBatchNormManualFunction(torch.autograd.Function):
 
     mu = torch.mean(input, 0)
     var = torch.var(input, 0, unbiased=False)
-    var = torch.sqrt(var * var +eps)
+    var = torch.sqrt(var  +eps)
 
     input = input - mu
     input_norm = input / var
@@ -190,7 +190,8 @@ class CustomBatchNormManualModule(nn.Module):
     self.n_neurons = n_neurons
     self.gamma = nn.Parameter(torch.empty(n_neurons).normal_(mean=0,std=0.0001))
     self.beta = nn.Parameter(torch.empty(n_neurons).normal_(mean=0,std=0.0001))
-    self.func = CustomBatchNormManualFunction()
+    self.func = CustomBatchNormManualFunction
+
 
 
   def forward(self, input):
@@ -207,8 +208,9 @@ class CustomBatchNormManualModule(nn.Module):
       Instantiate a CustomBatchNormManualFunction.
       Call it via its .apply() method.
     """
+    if input.shape[1] == self.n_neurons:
 
-    out = self.func.forward()
+      out = self.func.apply( input, self.gamma, self.beta)
 
     return out
 
@@ -241,7 +243,8 @@ if __name__=='__main__':
     y_manual_fct = bn_manual_fct.apply(input, gamma, beta)
     print('\tmeans={}\n\tvars={}'.format(y_manual_fct.mean(dim=0).data, y_manual_fct.var(dim=0).data))
     # gradient check
-    grad_correct = torch.autograd.gradcheck(bn_manual_fct.apply, (input,gamma,beta),eps=1e-4)
+    
+    grad_correct = torch.autograd.gradcheck(bn_manual_fct.apply, (input,gamma,beta),eps=1e-2)
     if grad_correct:
         print('\tgradient check successful')
     else:

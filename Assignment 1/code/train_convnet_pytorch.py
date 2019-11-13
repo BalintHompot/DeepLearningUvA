@@ -15,6 +15,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.autograd import Variable
+from matplotlib import pyplot as plt
 
 # Default constants
 LEARNING_RATE_DEFAULT = 1e-4
@@ -101,18 +102,27 @@ def train():
     X_test = X_test.cuda()
     Y_test = Y_test.cuda()
   
+  training_accuracies = []
+  test_accuracies = []
   ## training loop
   while training_set.epochs_completed <= f['max_steps']:
 
-    ## printing after epoch
+    ## average accuracy calculation after epoch
     if lastEpochNum != training_set.epochs_completed:
       lastEpochNum = training_set.epochs_completed
-      print("epoch " + str(lastEpochNum) + " avg accuracy on training data: "+ str(epoch_acc/batchCounter))
+      training_acc = epoch_acc/batchCounter
+      training_accuracies.append(training_acc)
+      print("epoch " + str(lastEpochNum) + " avg accuracy on training data: "+ str(training_acc))
       batchCounter = 0
       epoch_acc = 0
 
+      ## also calculate accuracy on the test data for better visualization
+      test_output = cnn(X_test)
+      test_out_np = test_output.cpu().detach().numpy()
+      test_acc = accuracy(test_out_np, test_labels)
+      test_accuracies.append(test_acc)
     
-    ## testing after number of batches
+    ## testing after number of batches, given the parameter
     if batchCounter % f['eval_freq'] == 0:
       test_output = cnn(X_test)
       test_out_np = test_output.cpu().detach().numpy()

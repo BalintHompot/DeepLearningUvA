@@ -11,7 +11,7 @@ import torch.optim as optim
 from torch.autograd import Variable
 from torch.utils.data import Dataset, DataLoader
 import torch.cuda
-
+from plotAccuracies import drawPlot
 
 import argparse
 import numpy as np
@@ -22,7 +22,7 @@ import cifar10_utils
 # Default constants
 DNN_HIDDEN_UNITS_DEFAULT = '100'
 LEARNING_RATE_DEFAULT = 0.1
-MAX_STEPS_DEFAULT = 1500
+MAX_STEPS_DEFAULT = 2
 BATCH_SIZE_DEFAULT = 200
 EVAL_FREQ_DEFAULT = 100
 NEG_SLOPE_DEFAULT = 0.02
@@ -118,15 +118,25 @@ def train():
     X_test = X_test.cuda()
     Y_test = Y_test.cuda()
 
+  training_accuracies = []
+  test_accuracies = []
   ## training loop
   while training_set.epochs_completed <= f['max_steps']:
 
     ## printing after epoch
     if lastEpochNum != training_set.epochs_completed:
       lastEpochNum = training_set.epochs_completed
-      print("epoch " + str(lastEpochNum) + " avg accuracy on training data: "+ str(epoch_acc/batchCounter))
+      train_acc = epoch_acc/batchCounter
+      training_accuracies.append(train_acc)
+      print("epoch " + str(lastEpochNum) + " avg accuracy on training data: "+ str(train_acc))
       batchCounter = 0
       epoch_acc = 0
+
+      ## also calculate accuracy on the test data for better visualization
+      test_output = mlp(X_test)
+      test_out_np = test_output.cpu().detach().numpy()
+      test_acc = accuracy(test_out_np, test_labels)
+      test_accuracies.append(test_acc)
 
     ## testing after number of batches
     if batchCounter % f['eval_freq'] == 0:
@@ -161,6 +171,8 @@ def train():
     acc = accuracy(outputs, batch_labels)
     epoch_acc += acc
     batchCounter += 1
+  
+  drawPlot(training_accuracies, test_accuracies)
 
 def print_flags():
   """

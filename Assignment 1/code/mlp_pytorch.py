@@ -65,6 +65,8 @@ class MLP(nn.Module):
       self.layers.append(nn.Linear(layerSize,n_classes))
       self.layers.append(nn.LeakyReLU(neg_slope))
 
+    print("---------- MLP initialized with Pytorch -----------")
+
 
   def forward(self, x):
     """

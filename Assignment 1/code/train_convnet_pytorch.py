@@ -147,7 +147,6 @@ def train():
     epoch_acc += acc
     batchCounter += 1
 
-  return "anyad"
 
 def print_flags():
   """
@@ -167,7 +166,7 @@ def main():
     os.makedirs(FLAGS.data_dir)
 
   # Run the training operation
-  return train()
+  train()
 
 if __name__ == '__main__':
   # Command line arguments

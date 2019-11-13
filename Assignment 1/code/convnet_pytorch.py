@@ -107,6 +107,8 @@ class ConvNet(nn.Module):
       self.layers.append(Flatten(512))
       self.layers.append(nn.Linear(512,n_classes))
       self.layers.append(nn.ReLU())
+    
+    print("--------------Convnet initialized------------")
 
   def forward(self, x):
     """

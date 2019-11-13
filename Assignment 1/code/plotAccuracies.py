@@ -1,6 +1,7 @@
 from matplotlib import pyplot as plt
-import numpy as np
-def drawPlot(trainAcc, testAcc):
+import os
+
+def drawPlot(trainAcc, testAcc, savePath):
 
     plt.plot(trainAcc)
     plt.plot(testAcc)
@@ -9,5 +10,7 @@ def drawPlot(trainAcc, testAcc):
     plt.ylabel('accuracy')
     plt.title('Accuracies on training and testing data')
     plt.legend(['Training (average of batches)', 'Testing'])
-    plt.show()
+    if os.path.isfile(savePath):
+        os.remove(savePath)
+    plt.savefig(savePath)
     return plt

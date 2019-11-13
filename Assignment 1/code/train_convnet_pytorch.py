@@ -96,11 +96,11 @@ def train():
   test_labels_class = np.argmax(test_labels, 1)
 
   X_test, Y_test = Variable(torch.Tensor(test_data)), Variable(torch.Tensor(test_labels_class))
-  '''
+  
   if torch.cuda.is_available():
     X_test = X_test.cuda()
     Y_test = Y_test.cuda()
-  '''
+  
   ## training loop
   while training_set.epochs_completed <= f['max_steps']:
 
@@ -111,7 +111,7 @@ def train():
       batchCounter = 0
       epoch_acc = 0
 
-    '''
+    
     ## testing after number of batches
     if batchCounter % f['eval_freq'] == 0:
       test_output = cnn(X_test)
@@ -120,7 +120,7 @@ def train():
       print("-----------------------")
       print("test accuracy: " + str(test_acc))
       print("-----------------------")
-    '''
+    
 
     ## fetching batch and training
     batch_data, batch_labels = training_set.next_batch(batch_size)

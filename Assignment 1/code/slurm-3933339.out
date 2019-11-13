@@ -1,3 +1,0 @@
-ERROR: Unable to locate a modulefile for 'eb'
-/hpc/eb/Debian9/Python/3.6.3-foss-2017b/bin/python3: can't open file 'tran_convnet_pytorch.py': [Errno 2] No such file or directory
-srun: error: r30n1: task 0: Exited with exit code 2

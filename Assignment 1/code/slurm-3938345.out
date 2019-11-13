@@ -1,0 +1,39 @@
+/home/lgpu0062/.conda/envs/dl/lib/python3.7/site-packages/matplotlib/font_manager.py:232: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
+  'Matplotlib is building the font cache using fc-list. '
+dnn_hidden_units : 100
+learning_rate : 0.1
+max_steps : 2
+batch_size : 200
+eval_freq : 100
+data_dir : ./cifar10/cifar-10-batches-py
+neg_slope : 0.02
+---------- MLP initialized with Pytorch -----------
+-----------------------
+test accuracy: 0.1234
+-----------------------
+-----------------------
+test accuracy: 0.3836
+-----------------------
+-----------------------
+test accuracy: 0.4207
+-----------------------
+epoch 1 avg accuracy on training data: 0.3769322709163346
+-----------------------
+test accuracy: 0.43
+-----------------------
+-----------------------
+test accuracy: 0.4512
+-----------------------
+-----------------------
+test accuracy: 0.4635
+-----------------------
+epoch 2 avg accuracy on training data: 0.4505599999999999
+-----------------------
+test accuracy: 0.4614
+-----------------------
+-----------------------
+test accuracy: 0.4697
+-----------------------
+-----------------------
+test accuracy: 0.4751
+-----------------------

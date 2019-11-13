@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "train_mlp_pytorch.py", line 14, in <module>
+    from plotAccuracies import drawPlot
+  File "/home/lgpu0062/DeepLearningUvA/Assignment 1/code/plotAccuracies.py", line 1, in <module>
+    from matplotlib import pyplot as plt
+ModuleNotFoundError: No module named 'matplotlib'
+srun: error: r31n1: task 0: Exited with exit code 1

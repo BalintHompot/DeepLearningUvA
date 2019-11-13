@@ -1,0 +1,12 @@
+#!/bin/bash
+
+#SBATCH --job-name=mlp_pytorch
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=3
+#SBATCH --ntasks-per-node=1
+#SBATCH --time=1:00:00
+#SBATCH --mem=60000M
+#SBATCH --partition=gpu_shared_course
+#SBATCH --gres=gpu:1
+source activate dl
+srun python3 -u train_mlp_pytorch.py

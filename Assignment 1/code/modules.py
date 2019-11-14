@@ -43,10 +43,10 @@ class LinearModule(object):
     ## weight gradients - storing for update at the end of batch, called by separate function
 
     weigth_grads = np.dot(np.transpose(dout), self.lastInput)
-    self.params['weight'] += self.learningRate * (weigth_grads/batchSize)
+    self.params['weight'] -= self.learningRate * (weigth_grads/batchSize)
 
     ## bias - derivative of activity is 1 w.r.t. to bias => 1*dout
-    self.params['bias'] += self.learningRate * (np.sum(dout, axis=0)/batchSize)
+    self.params['bias'] -= self.learningRate * (np.sum(dout, axis=0)/batchSize)
     return dx
 
   def derivative(self):
@@ -123,15 +123,15 @@ class CrossEntropyModule(object):
 
   def forward(self, x, y):
 
-
-    out = - np.dot(np.transpose(x), y)
-    self.lastActivity = out
-
+    out = - np.multiply(y, np.log(x))
+    ## for simplicity, we return the avg loss over the batch
+    out = np.sum(out, 1)
+    out = np.mean(out, 0)
     return out
 
   def backward(self, x, y):
 
     x[x<=0.00001] = 0.00001
-    dx = np.divide(y  , x )
+    dx = - np.divide(y  , x )
     return dx
   

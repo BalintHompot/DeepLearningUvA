@@ -113,7 +113,7 @@ def train():
       ## also calculate accuracy on the test data for better visualization
       test_output = mlp(X_test)
       test_out_np = test_output.cpu().detach().numpy()
-      test_loss = criterion(X_test, Y_test.long())           
+      test_loss = criterion(test_output, Y_test.long())           
       test_acc = accuracy(test_out_np, test_labels)
       test_accuracies.append(test_acc)
       test_losses.append(test_loss)
@@ -153,8 +153,8 @@ def train():
     epoch_acc += acc
     batchCounter += 1
   
-  drawPlot(training_accuracies, test_accuracies, './mlp-accuracies-pytorch.png', 'MLP pytorch - accuracies on training and test data')
-  drawPlot(training_losses, test_losses, './mlp-loss-pytorch.png', 'MLP pytorch - loss on training and test data')
+  drawPlot(training_accuracies, test_accuracies, './mlp-accuracies-pytorch.png', 'MLP pytorch - accuracies on training and test data', 1)
+  drawPlot(training_losses, test_losses, './mlp-loss-pytorch.png', 'MLP pytorch - loss on training and test data', 2)
 
 def print_flags():
   """

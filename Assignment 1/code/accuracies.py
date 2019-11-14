@@ -2,8 +2,8 @@ from matplotlib import pyplot as plt
 
 import numpy as np
 
-def drawPlot(trainAcc, testAcc, savePath, title):
-
+def drawPlot(trainAcc, testAcc, savePath, title, figNum):
+    plt.figure(figNum)
     plt.plot(trainAcc)
     plt.plot(testAcc)
 

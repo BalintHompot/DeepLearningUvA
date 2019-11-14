@@ -127,8 +127,8 @@ def train():
     epoch_loss += loss
     batchCounter += 1
 
-  drawPlot(training_accuracies, test_accuracies, './mlp-accuracies_numpy.png', 'MLP numpy - accuracies on training and test data')
-  drawPlot(training_losses, test_losses, './mlp-loss_numpy.png', 'MLP numpy - loss on training and test data')
+  drawPlot(training_accuracies, test_accuracies, './mlp-accuracies_numpy.png', 'MLP numpy - accuracies on training and test data', 5)
+  drawPlot(training_losses, test_losses, './mlp-loss_numpy.png', 'MLP numpy - loss on training and test data', 6)
 
 
 

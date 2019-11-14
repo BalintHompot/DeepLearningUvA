@@ -53,6 +53,7 @@ def train():
 
   cifar10 = cifar10_utils.get_cifar10("./cifar10/cifar-10-batches-py")
   training_set = cifar10['train']
+  test_set = cifar10['test']
   validation_set = cifar10['validation']
   f = vars(FLAGS)
   input_size = 3*32*32
@@ -62,17 +63,42 @@ def train():
   layers = dnn_hidden_units + [number_of_classes]
   mlp = MLP(input_size, layers, number_of_classes, neg_slope, f['learning_rate'])
   lastEpochNum = 0
-  epochCounter = 0
+  batchCounter = 0
   epoch_acc = 0
 
+  ## preparing test data
+  test_data, test_labels = test_set.images, test_set.labels
+  test_data = np.reshape(test_data, (np.shape(test_data)[0], input_size))
+  ### normalize
+  test_data = np.subtract(test_data,np.mean(test_data, 0))
+  test_data = np.divide(test_data, np.amax(test_data, 0))
+  
+
+  training_accuracies = []
+  test_accuracies = []
+
   while training_set.epochs_completed <= f['max_steps']:
+        ## average accuracy calculation after epoch
     if lastEpochNum != training_set.epochs_completed:
-      
       lastEpochNum = training_set.epochs_completed
-      
-      print("epoch " + str(lastEpochNum) + " avg accuracy on training data: "+ str(epoch_acc/epochCounter))
-      epochCounter = 0
+      training_acc = epoch_acc/batchCounter
+      training_accuracies.append(training_acc)
+      print("epoch " + str(lastEpochNum) + " avg accuracy on training data: "+ str(training_acc))
+      batchCounter = 0
       epoch_acc = 0
+
+      ## also calculate accuracy on the test data for better visualization
+      test_output = mlp.forward(test_data)
+      test_acc = accuracy(test_output, test_labels)
+      test_accuracies.append(test_acc)
+    
+    ## testing after number of batches, given the parameter
+    if batchCounter % f['eval_freq'] == 0:
+      test_output = mlp.forward(test_data)
+      test_acc = accuracy(test_output, test_labels)
+      print("-----------------------")
+      print("test accuracy: " + str(test_acc))
+      print("-----------------------")
 
     batch_data, batch_labels = training_set.next_batch(batch_size)
     batch_data_flat = np.reshape(batch_data, (batch_size, input_size))
@@ -89,7 +115,7 @@ def train():
 
     acc = accuracy(output, batch_labels)
     epoch_acc += acc
-    epochCounter += 1
+    batchCounter += 1
 
     
 

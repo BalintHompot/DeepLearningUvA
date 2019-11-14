@@ -16,8 +16,8 @@ from accuracies import drawPlot, accuracy
 
 # Default constants
 DNN_HIDDEN_UNITS_DEFAULT = '100'
-LEARNING_RATE_DEFAULT = 2e-3
-MAX_STEPS_DEFAULT = 300
+LEARNING_RATE_DEFAULT = 0.1
+MAX_STEPS_DEFAULT = 1500
 BATCH_SIZE_DEFAULT = 200
 EVAL_FREQ_DEFAULT = 100
 NEG_SLOPE_DEFAULT = 0.02
@@ -54,7 +54,8 @@ def train():
   cifar10 = cifar10_utils.get_cifar10("./cifar10/cifar-10-batches-py")
   training_set = cifar10['train']
   test_set = cifar10['test']
-  validation_set = cifar10['validation']
+    
+
   f = vars(FLAGS)
   input_size = 3*32*32
   number_of_classes = 10
@@ -72,16 +73,15 @@ def train():
   ### normalize
   test_data = np.subtract(test_data,np.mean(test_data, 0))
   test_data = np.divide(test_data, np.amax(test_data, 0))
-  
 
   training_accuracies = []
   test_accuracies = []
 
   while training_set.epochs_completed <= f['max_steps']:
-        ## average accuracy calculation after epoch
     if lastEpochNum != training_set.epochs_completed:
+      
       lastEpochNum = training_set.epochs_completed
-      training_acc = epoch_acc/(batchCounter/training_set.epochs_completed)
+      training_acc = epoch_acc/batchCounter
       training_accuracies.append(training_acc)
       print("epoch " + str(lastEpochNum) + " avg accuracy on training data: "+ str(training_acc))
       batchCounter = 0
@@ -91,7 +91,7 @@ def train():
       test_output = mlp.forward(test_data)
       test_acc = accuracy(test_output, test_labels)
       test_accuracies.append(test_acc)
-    
+
     ## testing after number of batches, given the parameter
     if batchCounter % f['eval_freq'] == 0:
       test_output = mlp.forward(test_data)
@@ -117,7 +117,7 @@ def train():
     epoch_acc += acc
     batchCounter += 1
 
-  drawPlot(training_accuracies, test_accuracies, './mlp-accuracies-numpy.png', 'MLP numpy')
+  drawPlot(training_accuracies, test_accuracies, './mlp-accuracies_numpy.png', 'MLP numpy')
 
 
 

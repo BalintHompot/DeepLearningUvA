@@ -45,7 +45,7 @@ class LinearModule(object):
     self.params['weight'] += self.learningRate * (weigth_grads/batchSize)
 
     ## bias - derivative of activity is 1 w.r.t. to bias => 1*dout
-    self.params['bias'] += self.learningRate * (np.sum(dout)/batchSize)
+    self.params['bias'] += self.learningRate * (np.sum(dout, axis=0)/batchSize)
     return dx
 
   def derivative(self):

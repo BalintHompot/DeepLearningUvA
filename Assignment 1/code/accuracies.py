@@ -1,5 +1,5 @@
 from matplotlib import pyplot as plt
-import os
+
 import numpy as np
 
 def drawPlot(trainAcc, testAcc, savePath):
@@ -7,12 +7,11 @@ def drawPlot(trainAcc, testAcc, savePath):
     plt.plot(trainAcc)
     plt.plot(testAcc)
 
-    plt.xlabel('epocc')
+    plt.xlabel('epoch')
     plt.ylabel('accuracy')
     plt.title('Accuracies on training and testing data')
     plt.legend(['Training (average of batches)', 'Testing'])
-    if os.path.isfile(savePath):
-        os.remove(savePath)
+
     plt.savefig(savePath)
     return plt
 
@@ -46,9 +45,3 @@ Returns:
   accuracy = correct/dim
 
   return accuracy
-
-def printAndStoreAcc(train_acc, test_acc, train_list, test_list, classifier):
-    pass
-
-def printTestAcc(test_data, test_labels, classifier):
-    pass

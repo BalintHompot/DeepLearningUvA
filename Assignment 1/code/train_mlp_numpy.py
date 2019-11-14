@@ -66,6 +66,7 @@ def train():
   lastEpochNum = 0
   batchCounter = 0
   epoch_acc = 0
+  epoch_loss = 0
 
   ## preparing test data
   test_data, test_labels = test_set.images, test_set.labels
@@ -77,20 +78,28 @@ def train():
   training_accuracies = []
   test_accuracies = []
 
+  training_losses = []
+  test_losses = []
+
   while training_set.epochs_completed <= f['max_steps']:
     if lastEpochNum != training_set.epochs_completed:
       
       lastEpochNum = training_set.epochs_completed
       training_acc = epoch_acc/batchCounter
+      tr_loss = epoch_loss/batchCounter
+      training_losses.append(tr_loss)
       training_accuracies.append(training_acc)
       print("epoch " + str(lastEpochNum) + " avg accuracy on training data: "+ str(training_acc))
       batchCounter = 0
       epoch_acc = 0
+      epoch_loss = 0
 
       ## also calculate accuracy on the test data for better visualization
       test_output = mlp.forward(test_data)
+      test_loss = mlp.loss.forward(test_output, test_labels)
       test_acc = accuracy(test_output, test_labels)
       test_accuracies.append(test_acc)
+      test_losses.append(test_loss)
 
     ## testing after number of batches, given the parameter
     if batchCounter % f['eval_freq'] == 0:
@@ -115,9 +124,11 @@ def train():
 
     acc = accuracy(output, batch_labels)
     epoch_acc += acc
+    epoch_loss += loss
     batchCounter += 1
 
-  drawPlot(training_accuracies, test_accuracies, './mlp-accuracies_numpy.png', 'MLP numpy')
+  drawPlot(training_accuracies, test_accuracies, './mlp-accuracies_numpy.png', 'MLP numpy - accuracies on training and test data')
+  drawPlot(training_losses, test_losses, './mlp-loss_numpy.png', 'MLP numpy - loss on training and test data')
 
 
 

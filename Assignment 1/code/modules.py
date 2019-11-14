@@ -13,8 +13,9 @@ class LinearModule(object):
     ##init values
     self.in_features = in_features
     self.out_features = out_features
-    weights = np.random.normal(0, 0.0001,(out_features, in_features))
-    biases = np.random.normal(0,0.0001, out_features)
+    ## note: as im normalizing the input, i chose a bigger std to avoid underflow
+    weights = np.random.normal(0, 0.01,(out_features, in_features))
+    biases = np.zeros(out_features)
 
     gradsW = np.zeros((out_features, in_features))
     gradsB = np.zeros(out_features)

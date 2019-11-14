@@ -9,11 +9,12 @@ def drawPlot(trainAcc, testAcc, savePath, title):
 
     plt.xlabel('epoch')
     plt.ylabel('accuracy')
-    plt.title(title + ' - accuracies on training and testing data')
+    plt.title(title)
     plt.legend(['Training (average of batches)', 'Testing'])
 
     plt.savefig(savePath)
     return plt
+
 
 def accuracy(predictions, targets):
   """

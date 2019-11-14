@@ -57,6 +57,8 @@ def train():
   lastEpochNum = 0
   batchCounter = 0
   epoch_acc = 0
+  epoch_loss = 0
+
   optimizer = optim.Adam(cnn.parameters(), lr=f['learning_rate'])
   criterion = torch.nn.CrossEntropyLoss()
 
@@ -76,6 +78,9 @@ def train():
   
   training_accuracies = []
   test_accuracies = []
+
+  training_losses = []
+  test_losses = []
   ## training loop
   while training_set.epochs_completed <= f['max_steps']:
 
@@ -83,16 +88,22 @@ def train():
     if lastEpochNum != training_set.epochs_completed:
       lastEpochNum = training_set.epochs_completed
       training_acc = epoch_acc/batchCounter
+      tr_loss = epoch_loss/batchCounter
+      training_losses.append(tr_loss)
       training_accuracies.append(training_acc)
       print("epoch " + str(lastEpochNum) + " avg accuracy on training data: "+ str(training_acc))
       batchCounter = 0
       epoch_acc = 0
+      epoch_loss = 0
 
       ## also calculate accuracy on the test data for better visualization
       test_output = cnn(X_test)
       test_out_np = test_output.cpu().detach().numpy()
+      test_loss = criterion(X_test, Y_test.long())
       test_acc = accuracy(test_out_np, test_labels)
       test_accuracies.append(test_acc)
+      test_losses.append(test_loss)
+
     
     ## testing after number of batches, given the parameter
     if batchCounter % f['eval_freq'] == 0:
@@ -127,9 +138,11 @@ def train():
 
     acc = accuracy(outputs, batch_labels)
     epoch_acc += acc
+    epoch_loss += loss
     batchCounter += 1
 
-  drawPlot(training_accuracies, test_accuracies, './cnn-accuracies.png', 'ConvNet')
+  drawPlot(training_accuracies, test_accuracies, './cnn-accuracies.png', 'ConvNet - accuracies on training and test data')
+  drawPlot(training_losses, test_losses, './cnn-loss_numpy.png', 'ConvNet - loss on training and test data')
 
 def print_flags():
   """

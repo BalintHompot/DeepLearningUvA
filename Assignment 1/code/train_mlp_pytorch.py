@@ -143,7 +143,7 @@ def train():
     epoch_acc += acc
     batchCounter += 1
   
-  drawPlot(training_accuracies, test_accuracies, './mlp-accuracies.png', 'MLP pytorch')
+  drawPlot(training_accuracies, test_accuracies, './mlp-accuracies-pytorch.png', 'MLP pytorch')
 
 def print_flags():
   """

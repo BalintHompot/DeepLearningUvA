@@ -1,0 +1,6 @@
+/var/spool/slurm-llnl/slurmd/job3939230/slurm_script: line 11: activate: No such file or directory
+Traceback (most recent call last):
+  File "train_mlp_pytorch.py", line 9, in <module>
+srun: error: r31n5: task 0: Exited with exit code 1
+    import torch
+ImportError: No module named 'torch'

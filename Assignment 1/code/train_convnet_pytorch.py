@@ -129,6 +129,7 @@ def train():
     epoch_acc += acc
     batchCounter += 1
 
+  drawPlot(training_accuracies, test_accuracies, './mlp-accuracies.png', 'ConvNet')
 
 def print_flags():
   """

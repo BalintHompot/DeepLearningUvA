@@ -2,14 +2,14 @@ from matplotlib import pyplot as plt
 
 import numpy as np
 
-def drawPlot(trainAcc, testAcc, savePath):
+def drawPlot(trainAcc, testAcc, savePath, title):
 
     plt.plot(trainAcc)
     plt.plot(testAcc)
 
     plt.xlabel('epoch')
     plt.ylabel('accuracy')
-    plt.title('Accuracies on training and testing data')
+    plt.title(title + ' - accuracies on training and testing data')
     plt.legend(['Training (average of batches)', 'Testing'])
 
     plt.savefig(savePath)

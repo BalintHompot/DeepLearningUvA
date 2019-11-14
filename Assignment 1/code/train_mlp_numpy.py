@@ -81,7 +81,7 @@ def train():
         ## average accuracy calculation after epoch
     if lastEpochNum != training_set.epochs_completed:
       lastEpochNum = training_set.epochs_completed
-      training_acc = epoch_acc/batchCounter
+      training_acc = epoch_acc/(batchCounter/training_set.epochs_completed)
       training_accuracies.append(training_acc)
       print("epoch " + str(lastEpochNum) + " avg accuracy on training data: "+ str(training_acc))
       batchCounter = 0
@@ -117,7 +117,8 @@ def train():
     epoch_acc += acc
     batchCounter += 1
 
-    
+  drawPlot(training_accuracies, test_accuracies, './mlp-accuracies.png', 'MLP numpy')
+
 
 
 

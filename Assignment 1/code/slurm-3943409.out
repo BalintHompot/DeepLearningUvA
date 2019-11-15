@@ -1,8 +1,0 @@
-/var/spool/slurm-llnl/slurmd/job3943409/slurm_script: line 11: activate: No such file or directory
-Traceback (most recent call last):
-  File "train_mlp_numpy.py", line 15, in <module>
-srun: error: r31n6: task 0: Exited with exit code 1
-    from accuracies import drawPlot, accuracy
-  File "/home/lgpu0062/DeepLearningUvA/Assignment 1/code/accuracies.py", line 1, in <module>
-    from matplotlib import pyplot as plt
-ImportError: No module named 'matplotlib'

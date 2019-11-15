@@ -77,7 +77,6 @@ def train():
   if torch.cuda.is_available():
     X_test = X_test.cuda()
     Y_test = Y_test.cuda()
-    print("test set added to gpu")
   training_accuracies = []
   test_accuracies = []
   training_losses = []
@@ -129,7 +128,6 @@ def train():
     if torch.cuda.is_available():
       X = X.cuda()
       Y = Y.cuda()
-      print("train batch added to gpu")
     
     optimizer.zero_grad()
     outputs = cnn(X)

@@ -49,7 +49,7 @@ def calculateTest(test_data_cpu, test_labels_cpu, numBatches, classifier, criter
       Y_test = test_labels_onehot[startInd:endInd]
       if torch.cuda.is_available():
         Y_test = Y_test.cuda()
-      test_loss = criterion(test_output, Y_test.long())
+      test_loss = criterion(test_output, Y_test.long()).data.item()
     test_acc = accuracy(test_out_np, test_labels_cpu[startInd:endInd])
     startInd = endInd
     endInd += batchLen
@@ -160,7 +160,7 @@ def train():
     
     optimizer.zero_grad()
     outputs = cnn(X)
-    loss = criterion(outputs, Y.long())
+    loss = criterion(outputs, Y.long()).data.item()
     loss.backward()
     optimizer.step()
     outputs = outputs.cpu().detach().numpy()

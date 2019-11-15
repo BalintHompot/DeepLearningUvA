@@ -1,0 +1,19 @@
+learning_rate : 0.0001
+max_steps : 50
+batch_size : 32
+eval_freq : 500
+data_dir : ./cifar10/cifar-10-batches-py
+--------------Convnet initialized------------
+(10000, 3, 32, 32)
+-----------------------
+test accuracy: 0.09999999999999941
+-----------------------
+Traceback (most recent call last):
+  File "train_convnet_pytorch.py", line 215, in <module>
+    main()
+  File "train_convnet_pytorch.py", line 198, in main
+    train()
+  File "train_convnet_pytorch.py", line 164, in train
+    loss.backward()
+AttributeError: 'float' object has no attribute 'backward'
+srun: error: r31n5: task 0: Exited with exit code 1

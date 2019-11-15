@@ -1,11 +1,11 @@
 #!/bin/bash
 
-#SBATCH --job-name=mlp_pytorch
+#SBATCH --job-name=cnn_pytorch
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=3
+#SBATCH --cpus-per-task=10
 #SBATCH --ntasks-per-node=1
 #SBATCH --time=5:00:00
-#SBATCH --mem=60000M
+#SBATCH --mem=100000M
 #SBATCH --partition=gpu_shared_course
 #SBATCH --gres=gpu:1
 source activate dl

@@ -65,6 +65,7 @@ def train():
   ## preparing test data
   print(np.shape(test_set.images))
   test_data, test_labels = test_set.images[0:200], test_set.labels[0:200]
+
   ### normalize
   test_data = np.subtract(test_data,np.mean(test_data, 0))
   test_data = np.divide(test_data, np.amax(test_data, 0))
@@ -73,7 +74,10 @@ def train():
 
   
   X_test, Y_test = Variable(torch.Tensor(test_data)), Variable(torch.Tensor(test_labels_class))
-
+  if torch.cuda.is_available():
+    X_test = X_test.cuda()
+    Y_test = Y_test.cuda()
+    print("test set added to gpu")
   training_accuracies = []
   test_accuracies = []
   training_losses = []

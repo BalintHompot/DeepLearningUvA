@@ -81,7 +81,11 @@ def train():
   training_losses = []
   test_losses = []
 
-  while training_set.epochs_completed <= f['max_steps']:
+  num_data = np.shape(training_set.images)[0]
+  max_epochs = f['max_steps']/(num_data/batch_size)
+
+
+  while training_set.epochs_completed <= max_epochs:
     if lastEpochNum != training_set.epochs_completed:
       
       lastEpochNum = training_set.epochs_completed

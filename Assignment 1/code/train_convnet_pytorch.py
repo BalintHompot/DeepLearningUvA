@@ -162,7 +162,7 @@ def train():
     outputs = cnn(X)
     loss = criterion(outputs, Y.long())
     loss.backward()
-    loss = criterion(outputs, Y.long()).data.item()
+    loss = loss.data.item()
     optimizer.step()
     outputs = outputs.cpu().detach().numpy()
 

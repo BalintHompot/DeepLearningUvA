@@ -64,7 +64,7 @@ def train():
 
   ## preparing test data
   print(np.shape(test_set.images))
-  test_data, test_labels = test_set.images, test_set.labels
+  test_data, test_labels = test_set.images[0:200], test_set.labels[0:200]
   ### normalize
   test_data = np.subtract(test_data,np.mean(test_data, 0))
   test_data = np.divide(test_data, np.amax(test_data, 0))

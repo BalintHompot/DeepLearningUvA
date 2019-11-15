@@ -60,6 +60,11 @@ def calculateTest(test_data_cpu, test_labels_cpu, numBatches, classifier, criter
     if lossCalc:
       Y_test.detach()
 
+  if printing:
+    print("-----------------------")
+    print("test accuracy: " + str(total_acc/numBatches))
+    print("-----------------------")
+
 
   return total_acc/numBatches, total_loss/numBatches
 
@@ -137,12 +142,6 @@ def train():
     ## testing and printng after number of batches, given the parameter
     if batchCounter % f['eval_freq'] == 0:
       calculateTest(X_test, test_labels, 20, cnn, printing=True, lossCalc=False)
-      test_output = cnn(X_test)
-      test_out_np = test_output.cpu().detach().numpy()
-      test_acc = accuracy(test_out_np, test_labels)
-      print("-----------------------")
-      print("test accuracy: " + str(test_acc))
-      print("-----------------------")
     
 
     ## fetching batch and training

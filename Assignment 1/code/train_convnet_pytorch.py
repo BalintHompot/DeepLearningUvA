@@ -94,34 +94,22 @@ def train():
       epoch_loss = 0
 
       ## also calculate accuracy on the test data for better visualization
-      if torch.cuda.is_available():
-        X_test = X_test.cuda()
-        Y_test = Y_test.cuda()  
-        print("test set added to gpu")
       test_output = cnn(X_test)
       test_out_np = test_output.cpu().detach().numpy()
       test_loss = criterion(test_output, Y_test.long())
       test_acc = accuracy(test_out_np, test_labels)
       test_accuracies.append(test_acc)
       test_losses.append(test_loss)
-      X_test.detach()
-      Y_test.detach()
 
     
     ## testing after number of batches, given the parameter
     if batchCounter % f['eval_freq'] == 0:
-      if torch.cuda.is_available():
-        X_test = X_test.cuda()
-        Y_test = Y_test.cuda()  
-        print("test set added to gpu")
       test_output = cnn(X_test)
       test_out_np = test_output.cpu().detach().numpy()
       test_acc = accuracy(test_out_np, test_labels)
       print("-----------------------")
       print("test accuracy: " + str(test_acc))
       print("-----------------------")
-      X_test.detach()
-      Y_test.detach()
     
 
     ## fetching batch and training

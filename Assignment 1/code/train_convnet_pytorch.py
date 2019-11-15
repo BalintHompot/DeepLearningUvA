@@ -173,6 +173,7 @@ def train():
     X.detach()
     Y.detach()
     loss.detach()
+    torch.cuda.empty_cache()
 
   drawPlot(training_accuracies, test_accuracies, './cnn-accuracies.png', 'ConvNet - accuracies on training and test data', 3)
   drawPlot(training_losses, test_losses, './cnn-loss_numpy.png', 'ConvNet - loss on training and test data', 4)

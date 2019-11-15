@@ -1,0 +1,611 @@
+dnn_hidden_units : 100
+learning_rate : 0.02
+max_steps : 150
+batch_size : 1000
+eval_freq : 100
+data_dir : ./cifar10/cifar-10-batches-py
+neg_slope : 0.02
+---------- MLP initialized with Pytorch -----------
+-----------------------
+test accuracy: 0.1023
+-----------------------
+epoch 1 avg accuracy on training data: 0.20570588235294124
+-----------------------
+test accuracy: 0.2353
+-----------------------
+epoch 2 avg accuracy on training data: 0.26593999999999995
+-----------------------
+test accuracy: 0.2936
+-----------------------
+epoch 3 avg accuracy on training data: 0.3070799999999999
+-----------------------
+test accuracy: 0.3286
+-----------------------
+epoch 4 avg accuracy on training data: 0.3348799999999999
+-----------------------
+test accuracy: 0.3479
+-----------------------
+epoch 5 avg accuracy on training data: 0.35414000000000007
+-----------------------
+test accuracy: 0.3643
+-----------------------
+epoch 6 avg accuracy on training data: 0.36646
+-----------------------
+test accuracy: 0.3736
+-----------------------
+epoch 7 avg accuracy on training data: 0.37742
+-----------------------
+test accuracy: 0.384
+-----------------------
+epoch 8 avg accuracy on training data: 0.38588
+-----------------------
+test accuracy: 0.3873
+-----------------------
+epoch 9 avg accuracy on training data: 0.3920000000000001
+-----------------------
+test accuracy: 0.3929
+-----------------------
+epoch 10 avg accuracy on training data: 0.39946000000000004
+-----------------------
+test accuracy: 0.4008
+-----------------------
+epoch 11 avg accuracy on training data: 0.40471999999999997
+-----------------------
+test accuracy: 0.407
+-----------------------
+epoch 12 avg accuracy on training data: 0.41164
+-----------------------
+test accuracy: 0.4103
+-----------------------
+epoch 13 avg accuracy on training data: 0.4164799999999999
+-----------------------
+test accuracy: 0.4177
+-----------------------
+epoch 14 avg accuracy on training data: 0.4202399999999999
+-----------------------
+test accuracy: 0.4235
+-----------------------
+epoch 15 avg accuracy on training data: 0.42480000000000007
+-----------------------
+test accuracy: 0.4259
+-----------------------
+epoch 16 avg accuracy on training data: 0.42796000000000006
+-----------------------
+test accuracy: 0.4296
+-----------------------
+epoch 17 avg accuracy on training data: 0.43323999999999985
+-----------------------
+test accuracy: 0.4309
+-----------------------
+epoch 18 avg accuracy on training data: 0.43615999999999994
+-----------------------
+test accuracy: 0.4355
+-----------------------
+epoch 19 avg accuracy on training data: 0.4380399999999999
+-----------------------
+test accuracy: 0.4389
+-----------------------
+epoch 20 avg accuracy on training data: 0.44239999999999996
+-----------------------
+test accuracy: 0.4396
+-----------------------
+epoch 21 avg accuracy on training data: 0.44508
+-----------------------
+test accuracy: 0.4445
+-----------------------
+epoch 22 avg accuracy on training data: 0.4480800000000001
+-----------------------
+test accuracy: 0.4464
+-----------------------
+epoch 23 avg accuracy on training data: 0.44968
+-----------------------
+test accuracy: 0.4516
+-----------------------
+epoch 24 avg accuracy on training data: 0.45332
+-----------------------
+test accuracy: 0.453
+-----------------------
+epoch 25 avg accuracy on training data: 0.45632000000000006
+-----------------------
+test accuracy: 0.4577
+-----------------------
+epoch 26 avg accuracy on training data: 0.45942
+-----------------------
+test accuracy: 0.4563
+-----------------------
+epoch 27 avg accuracy on training data: 0.46078000000000024
+-----------------------
+test accuracy: 0.46
+-----------------------
+epoch 28 avg accuracy on training data: 0.46346000000000004
+-----------------------
+test accuracy: 0.462
+-----------------------
+epoch 29 avg accuracy on training data: 0.46614000000000005
+-----------------------
+test accuracy: 0.4639
+-----------------------
+epoch 30 avg accuracy on training data: 0.46740000000000004
+-----------------------
+test accuracy: 0.4654
+-----------------------
+epoch 31 avg accuracy on training data: 0.46909999999999996
+-----------------------
+test accuracy: 0.4669
+-----------------------
+epoch 32 avg accuracy on training data: 0.47198
+-----------------------
+test accuracy: 0.4674
+-----------------------
+epoch 33 avg accuracy on training data: 0.47428000000000003
+-----------------------
+test accuracy: 0.4683
+-----------------------
+epoch 34 avg accuracy on training data: 0.47653999999999996
+-----------------------
+test accuracy: 0.4709
+-----------------------
+epoch 35 avg accuracy on training data: 0.47885999999999984
+-----------------------
+test accuracy: 0.4725
+-----------------------
+epoch 36 avg accuracy on training data: 0.4802599999999999
+-----------------------
+test accuracy: 0.4735
+-----------------------
+epoch 37 avg accuracy on training data: 0.4833
+-----------------------
+test accuracy: 0.4748
+-----------------------
+epoch 38 avg accuracy on training data: 0.4838000000000002
+-----------------------
+test accuracy: 0.4759
+-----------------------
+epoch 39 avg accuracy on training data: 0.48671999999999976
+-----------------------
+test accuracy: 0.4766
+-----------------------
+epoch 40 avg accuracy on training data: 0.4879
+-----------------------
+test accuracy: 0.4782
+-----------------------
+epoch 41 avg accuracy on training data: 0.4904600000000001
+-----------------------
+test accuracy: 0.4806
+-----------------------
+epoch 42 avg accuracy on training data: 0.49145999999999984
+-----------------------
+test accuracy: 0.4799
+-----------------------
+epoch 43 avg accuracy on training data: 0.4930199999999999
+-----------------------
+test accuracy: 0.4813
+-----------------------
+epoch 44 avg accuracy on training data: 0.49527999999999994
+-----------------------
+test accuracy: 0.4834
+-----------------------
+epoch 45 avg accuracy on training data: 0.4964200000000001
+-----------------------
+test accuracy: 0.4844
+-----------------------
+epoch 46 avg accuracy on training data: 0.4992800000000001
+-----------------------
+test accuracy: 0.4847
+-----------------------
+epoch 47 avg accuracy on training data: 0.49967999999999996
+-----------------------
+test accuracy: 0.4875
+-----------------------
+epoch 48 avg accuracy on training data: 0.5008600000000001
+-----------------------
+test accuracy: 0.4878
+-----------------------
+epoch 49 avg accuracy on training data: 0.5050600000000001
+-----------------------
+test accuracy: 0.4876
+-----------------------
+epoch 50 avg accuracy on training data: 0.5035200000000001
+-----------------------
+test accuracy: 0.4911
+-----------------------
+epoch 51 avg accuracy on training data: 0.5065600000000001
+-----------------------
+test accuracy: 0.4912
+-----------------------
+epoch 52 avg accuracy on training data: 0.50738
+-----------------------
+test accuracy: 0.4904
+-----------------------
+epoch 53 avg accuracy on training data: 0.50916
+-----------------------
+test accuracy: 0.4923
+-----------------------
+epoch 54 avg accuracy on training data: 0.50916
+-----------------------
+test accuracy: 0.4916
+-----------------------
+epoch 55 avg accuracy on training data: 0.51174
+-----------------------
+test accuracy: 0.4925
+-----------------------
+epoch 56 avg accuracy on training data: 0.51228
+-----------------------
+test accuracy: 0.4932
+-----------------------
+epoch 57 avg accuracy on training data: 0.5144199999999999
+-----------------------
+test accuracy: 0.4928
+-----------------------
+epoch 58 avg accuracy on training data: 0.5157600000000002
+-----------------------
+test accuracy: 0.4945
+-----------------------
+epoch 59 avg accuracy on training data: 0.5164
+-----------------------
+test accuracy: 0.4944
+-----------------------
+epoch 60 avg accuracy on training data: 0.51954
+-----------------------
+test accuracy: 0.4964
+-----------------------
+epoch 61 avg accuracy on training data: 0.51934
+-----------------------
+test accuracy: 0.4954
+-----------------------
+epoch 62 avg accuracy on training data: 0.5210199999999999
+-----------------------
+test accuracy: 0.497
+-----------------------
+epoch 63 avg accuracy on training data: 0.5220800000000001
+-----------------------
+test accuracy: 0.5006
+-----------------------
+epoch 64 avg accuracy on training data: 0.5236200000000001
+-----------------------
+test accuracy: 0.4986
+-----------------------
+epoch 65 avg accuracy on training data: 0.5252399999999999
+-----------------------
+test accuracy: 0.4992
+-----------------------
+epoch 66 avg accuracy on training data: 0.5258800000000002
+-----------------------
+test accuracy: 0.5012
+-----------------------
+epoch 67 avg accuracy on training data: 0.52814
+-----------------------
+test accuracy: 0.5012
+-----------------------
+epoch 68 avg accuracy on training data: 0.5282199999999999
+-----------------------
+test accuracy: 0.5014
+-----------------------
+epoch 69 avg accuracy on training data: 0.5297999999999999
+-----------------------
+test accuracy: 0.5014
+-----------------------
+epoch 70 avg accuracy on training data: 0.53214
+-----------------------
+test accuracy: 0.5019
+-----------------------
+epoch 71 avg accuracy on training data: 0.53172
+-----------------------
+test accuracy: 0.5038
+-----------------------
+epoch 72 avg accuracy on training data: 0.5345799999999999
+-----------------------
+test accuracy: 0.5041
+-----------------------
+epoch 73 avg accuracy on training data: 0.535
+-----------------------
+test accuracy: 0.5054
+-----------------------
+epoch 74 avg accuracy on training data: 0.5354000000000001
+-----------------------
+test accuracy: 0.5057
+-----------------------
+epoch 75 avg accuracy on training data: 0.53594
+-----------------------
+test accuracy: 0.5054
+-----------------------
+epoch 76 avg accuracy on training data: 0.5374799999999998
+-----------------------
+test accuracy: 0.5082
+-----------------------
+epoch 77 avg accuracy on training data: 0.5382400000000002
+-----------------------
+test accuracy: 0.5062
+-----------------------
+epoch 78 avg accuracy on training data: 0.54086
+-----------------------
+test accuracy: 0.507
+-----------------------
+epoch 79 avg accuracy on training data: 0.5403199999999999
+-----------------------
+test accuracy: 0.5076
+-----------------------
+epoch 80 avg accuracy on training data: 0.5415200000000001
+-----------------------
+test accuracy: 0.5075
+-----------------------
+epoch 81 avg accuracy on training data: 0.54324
+-----------------------
+test accuracy: 0.5063
+-----------------------
+epoch 82 avg accuracy on training data: 0.5440399999999999
+-----------------------
+test accuracy: 0.5106
+-----------------------
+epoch 83 avg accuracy on training data: 0.5436
+-----------------------
+test accuracy: 0.5089
+-----------------------
+epoch 84 avg accuracy on training data: 0.54622
+-----------------------
+test accuracy: 0.5088
+-----------------------
+epoch 85 avg accuracy on training data: 0.54708
+-----------------------
+test accuracy: 0.51
+-----------------------
+epoch 86 avg accuracy on training data: 0.5491600000000001
+-----------------------
+test accuracy: 0.5104
+-----------------------
+epoch 87 avg accuracy on training data: 0.5480799999999999
+-----------------------
+test accuracy: 0.5111
+-----------------------
+epoch 88 avg accuracy on training data: 0.55062
+-----------------------
+test accuracy: 0.5119
+-----------------------
+epoch 89 avg accuracy on training data: 0.55044
+-----------------------
+test accuracy: 0.5111
+-----------------------
+epoch 90 avg accuracy on training data: 0.5525599999999998
+-----------------------
+test accuracy: 0.5104
+-----------------------
+epoch 91 avg accuracy on training data: 0.5520999999999999
+-----------------------
+test accuracy: 0.5121
+-----------------------
+epoch 92 avg accuracy on training data: 0.55442
+-----------------------
+test accuracy: 0.5117
+-----------------------
+epoch 93 avg accuracy on training data: 0.5555
+-----------------------
+test accuracy: 0.512
+-----------------------
+epoch 94 avg accuracy on training data: 0.5553400000000001
+-----------------------
+test accuracy: 0.512
+-----------------------
+epoch 95 avg accuracy on training data: 0.5582199999999999
+-----------------------
+test accuracy: 0.5131
+-----------------------
+epoch 96 avg accuracy on training data: 0.5587399999999999
+-----------------------
+test accuracy: 0.5133
+-----------------------
+epoch 97 avg accuracy on training data: 0.5581799999999998
+-----------------------
+test accuracy: 0.5142
+-----------------------
+epoch 98 avg accuracy on training data: 0.5610200000000001
+-----------------------
+test accuracy: 0.5143
+-----------------------
+epoch 99 avg accuracy on training data: 0.56176
+-----------------------
+test accuracy: 0.5145
+-----------------------
+epoch 100 avg accuracy on training data: 0.5620200000000001
+-----------------------
+test accuracy: 0.5152
+-----------------------
+epoch 101 avg accuracy on training data: 0.56298
+-----------------------
+test accuracy: 0.5153
+-----------------------
+epoch 102 avg accuracy on training data: 0.5628600000000001
+-----------------------
+test accuracy: 0.5163
+-----------------------
+epoch 103 avg accuracy on training data: 0.5660800000000001
+-----------------------
+test accuracy: 0.5144
+-----------------------
+epoch 104 avg accuracy on training data: 0.5662799999999999
+-----------------------
+test accuracy: 0.515
+-----------------------
+epoch 105 avg accuracy on training data: 0.5658000000000001
+-----------------------
+test accuracy: 0.5169
+-----------------------
+epoch 106 avg accuracy on training data: 0.56778
+-----------------------
+test accuracy: 0.5159
+-----------------------
+epoch 107 avg accuracy on training data: 0.56792
+-----------------------
+test accuracy: 0.5183
+-----------------------
+epoch 108 avg accuracy on training data: 0.5694599999999999
+-----------------------
+test accuracy: 0.5184
+-----------------------
+epoch 109 avg accuracy on training data: 0.57144
+-----------------------
+test accuracy: 0.5179
+-----------------------
+epoch 110 avg accuracy on training data: 0.5717599999999999
+-----------------------
+test accuracy: 0.5181
+-----------------------
+epoch 111 avg accuracy on training data: 0.5711599999999999
+-----------------------
+test accuracy: 0.5183
+-----------------------
+epoch 112 avg accuracy on training data: 0.5723400000000001
+-----------------------
+test accuracy: 0.5194
+-----------------------
+epoch 113 avg accuracy on training data: 0.57304
+-----------------------
+test accuracy: 0.5205
+-----------------------
+epoch 114 avg accuracy on training data: 0.57366
+-----------------------
+test accuracy: 0.5187
+-----------------------
+epoch 115 avg accuracy on training data: 0.5744999999999998
+-----------------------
+test accuracy: 0.5201
+-----------------------
+epoch 116 avg accuracy on training data: 0.5761399999999999
+-----------------------
+test accuracy: 0.5216
+-----------------------
+epoch 117 avg accuracy on training data: 0.5780799999999998
+-----------------------
+test accuracy: 0.5209
+-----------------------
+epoch 118 avg accuracy on training data: 0.57648
+-----------------------
+test accuracy: 0.5198
+-----------------------
+epoch 119 avg accuracy on training data: 0.57808
+-----------------------
+test accuracy: 0.5219
+-----------------------
+epoch 120 avg accuracy on training data: 0.5798200000000001
+-----------------------
+test accuracy: 0.5189
+-----------------------
+epoch 121 avg accuracy on training data: 0.5798399999999999
+-----------------------
+test accuracy: 0.5211
+-----------------------
+epoch 122 avg accuracy on training data: 0.57954
+-----------------------
+test accuracy: 0.5192
+-----------------------
+epoch 123 avg accuracy on training data: 0.58138
+-----------------------
+test accuracy: 0.5191
+-----------------------
+epoch 124 avg accuracy on training data: 0.5821599999999999
+-----------------------
+test accuracy: 0.5217
+-----------------------
+epoch 125 avg accuracy on training data: 0.5836199999999999
+-----------------------
+test accuracy: 0.5247
+-----------------------
+epoch 126 avg accuracy on training data: 0.58456
+-----------------------
+test accuracy: 0.5224
+-----------------------
+epoch 127 avg accuracy on training data: 0.5847399999999998
+-----------------------
+test accuracy: 0.5225
+-----------------------
+epoch 128 avg accuracy on training data: 0.5845799999999998
+-----------------------
+test accuracy: 0.522
+-----------------------
+epoch 129 avg accuracy on training data: 0.5864400000000001
+-----------------------
+test accuracy: 0.5222
+-----------------------
+epoch 130 avg accuracy on training data: 0.5878600000000002
+-----------------------
+test accuracy: 0.5212
+-----------------------
+epoch 131 avg accuracy on training data: 0.5870399999999999
+-----------------------
+test accuracy: 0.5231
+-----------------------
+epoch 132 avg accuracy on training data: 0.5880199999999999
+-----------------------
+test accuracy: 0.52
+-----------------------
+epoch 133 avg accuracy on training data: 0.5882399999999997
+-----------------------
+test accuracy: 0.5218
+-----------------------
+epoch 134 avg accuracy on training data: 0.5894600000000001
+-----------------------
+test accuracy: 0.5216
+-----------------------
+epoch 135 avg accuracy on training data: 0.5902199999999999
+-----------------------
+test accuracy: 0.5229
+-----------------------
+epoch 136 avg accuracy on training data: 0.5913799999999999
+-----------------------
+test accuracy: 0.5236
+-----------------------
+epoch 137 avg accuracy on training data: 0.5924200000000002
+-----------------------
+test accuracy: 0.522
+-----------------------
+epoch 138 avg accuracy on training data: 0.5927999999999999
+-----------------------
+test accuracy: 0.5249
+-----------------------
+epoch 139 avg accuracy on training data: 0.5935599999999998
+-----------------------
+test accuracy: 0.5234
+-----------------------
+epoch 140 avg accuracy on training data: 0.5949000000000002
+-----------------------
+test accuracy: 0.521
+-----------------------
+epoch 141 avg accuracy on training data: 0.5929399999999998
+-----------------------
+test accuracy: 0.5219
+-----------------------
+epoch 142 avg accuracy on training data: 0.5968800000000002
+-----------------------
+test accuracy: 0.5231
+-----------------------
+epoch 143 avg accuracy on training data: 0.5961
+-----------------------
+test accuracy: 0.5224
+-----------------------
+epoch 144 avg accuracy on training data: 0.59624
+-----------------------
+test accuracy: 0.5233
+-----------------------
+epoch 145 avg accuracy on training data: 0.5977
+-----------------------
+test accuracy: 0.5246
+-----------------------
+epoch 146 avg accuracy on training data: 0.5977999999999999
+-----------------------
+test accuracy: 0.5243
+-----------------------
+epoch 147 avg accuracy on training data: 0.5978000000000001
+-----------------------
+test accuracy: 0.522
+-----------------------
+epoch 148 avg accuracy on training data: 0.60012
+-----------------------
+test accuracy: 0.5244
+-----------------------
+epoch 149 avg accuracy on training data: 0.6007199999999999
+-----------------------
+test accuracy: 0.5245
+-----------------------
+epoch 150 avg accuracy on training data: 0.6013200000000001
+-----------------------
+test accuracy: 0.5227
+-----------------------

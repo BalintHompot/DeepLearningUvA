@@ -40,6 +40,7 @@ Returns:
   max_indices = np.argmax(predictions, axis= 1)
   dim = len(max_indices)
   correct = 0
+  ### i was told it's ok looping here
   for instance in range(dim):
     if targets[instance][max_indices[instance]] == 1:
       correct += 1

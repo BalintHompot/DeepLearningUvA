@@ -31,7 +31,7 @@ DATA_DIR_DEFAULT = './cifar10/cifar-10-batches-py'
 FLAGS = None
 
 def calculateTest(test_data_cpu, test_labels_cpu, numBatches, classifier, criterion = None, printing = False, lossCalc = True, test_labels_onehot = None):
-  
+  ## because of memory limitations, we calc test in batches
   startInd = 0
   batchLen = int(np.shape(test_data_cpu)[0]/numBatches)
   endInd = batchLen
@@ -134,14 +134,14 @@ def train():
       epoch_loss = 0
 
       ## also calculate accuracy on the test data for better visualization
-      test_acc, test_loss = calculateTest(X_test, test_labels, 20, cnn, criterion, test_labels_onehot=Y_test)
+      test_acc, test_loss = calculateTest(X_test, test_labels, 400, cnn, criterion, test_labels_onehot=Y_test)
       test_accuracies.append(test_acc)
       test_losses.append(test_loss)
 
     
     ## testing and printng after number of batches, given the parameter
     if batchCounter % f['eval_freq'] == 0:
-      calculateTest(X_test, test_labels, 20, cnn, printing=True, lossCalc=False)
+      calculateTest(X_test, test_labels, 400, cnn, printing=True, lossCalc=False)
     
 
     ## fetching batch and training

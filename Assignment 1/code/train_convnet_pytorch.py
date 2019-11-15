@@ -21,7 +21,7 @@ from matplotlib import pyplot as plt
 # Default constants
 LEARNING_RATE_DEFAULT = 1e-4
 BATCH_SIZE_DEFAULT = 32
-MAX_STEPS_DEFAULT = 500
+MAX_STEPS_DEFAULT = 20
 EVAL_FREQ_DEFAULT = 500
 OPTIMIZER_DEFAULT = 'ADAM'
 
@@ -82,12 +82,8 @@ def train():
   training_losses = []
   test_losses = []
   ## training loop
-  num_data = np.shape(training_set.images)[0]
-  max_epochs = f['max_steps']/(num_data/batch_size)
+  while training_set.epochs_completed <= f['max_steps']:
 
-  ## training loop
-
-  while training_set.epochs_completed <= max_epochs:
     ## average accuracy calculation after epoch
     if lastEpochNum != training_set.epochs_completed:
       lastEpochNum = training_set.epochs_completed

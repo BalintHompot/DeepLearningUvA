@@ -17,7 +17,7 @@ from accuracies import drawPlot, accuracy
 # Default constants
 DNN_HIDDEN_UNITS_DEFAULT = '100'
 LEARNING_RATE_DEFAULT = 2e-3
-MAX_STEPS_DEFAULT = 1500
+MAX_STEPS_DEFAULT = 50
 BATCH_SIZE_DEFAULT = 200
 EVAL_FREQ_DEFAULT = 100
 NEG_SLOPE_DEFAULT = 0.02
@@ -80,12 +80,9 @@ def train():
 
   training_losses = []
   test_losses = []
+  
 
-  num_data = np.shape(training_set.images)[0]
-  max_epochs = f['max_steps']/(num_data/batch_size)
-
-
-  while training_set.epochs_completed <= max_epochs:
+  while training_set.epochs_completed <= f['max_steps']:
     if lastEpochNum != training_set.epochs_completed:
       
       lastEpochNum = training_set.epochs_completed

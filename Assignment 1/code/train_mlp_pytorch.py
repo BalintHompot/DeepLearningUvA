@@ -152,6 +152,10 @@ def train():
     epoch_loss += loss
     epoch_acc += acc
     batchCounter += 1
+
+    X.detach()
+    Y.detach()
+    loss.detach()
   
   drawPlot(training_accuracies, test_accuracies, './mlp-accuracies-pytorch.png', 'MLP pytorch - accuracies on training and test data', 1)
   drawPlot(training_losses, test_losses, './mlp-loss-pytorch.png', 'MLP pytorch - loss on training and test data', 2)

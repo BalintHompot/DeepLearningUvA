@@ -30,6 +30,33 @@ DATA_DIR_DEFAULT = './cifar10/cifar-10-batches-py'
 
 FLAGS = None
 
+def calculateTest(test_data_cpu, test_labels_cpu, numBatches, classifier, criterion = None, printing = False, lossCalc = True, test_labels_onehot = None):
+  
+  startInd = 0
+  batchLen = int(np.shape(test_data_cpu.images)[0]/numBatches)
+  endInd = batchLen
+  test_loss = 0
+  total_loss = 0
+  total_acc = 0
+
+  for batch in range(numBatches):
+    X_test,Y_test = test_data_cpu[startInd:endInd], test_labels_onehot[startInd:endInd]
+    if torch.cuda.is_available():
+      X_test,Y_test = X_test.cuda(), Y_test.cuda()
+    test_output = classifier(X_test)
+    test_out_np = test_output.cpu().detach().numpy()
+    if lossCalc:
+      test_loss = criterion(test_output, Y_test.long())
+    test_acc = accuracy(test_out_np, test_labels_cpu[startInd:endInd])
+    startInd = endInd
+    endInd += batchLen
+    total_acc += test_acc
+    total_loss += test_loss
+
+
+  return total_acc/numBatches, total_loss/numBatches
+
+    
 
 def train():
   """
@@ -74,9 +101,7 @@ def train():
 
   
   X_test, Y_test = Variable(torch.Tensor(test_data)), Variable(torch.Tensor(test_labels_class))
-  if torch.cuda.is_available():
-    X_test = X_test.cuda()
-    Y_test = Y_test.cuda()
+
   training_accuracies = []
   test_accuracies = []
   training_losses = []
@@ -97,16 +122,14 @@ def train():
       epoch_loss = 0
 
       ## also calculate accuracy on the test data for better visualization
-      test_output = cnn(X_test)
-      test_out_np = test_output.cpu().detach().numpy()
-      test_loss = criterion(test_output, Y_test.long())
-      test_acc = accuracy(test_out_np, test_labels)
+      test_acc, test_loss = calculateTest(X_test, test_labels, 20, cnn, criterion, test_labels_onehot=Y_test)
       test_accuracies.append(test_acc)
       test_losses.append(test_loss)
 
     
-    ## testing after number of batches, given the parameter
+    ## testing and printng after number of batches, given the parameter
     if batchCounter % f['eval_freq'] == 0:
+      calculateTest(X_test, test_labels, 20, cnn, printing=True, lossCalc=False)
       test_output = cnn(X_test)
       test_out_np = test_output.cpu().detach().numpy()
       test_acc = accuracy(test_out_np, test_labels)

@@ -103,7 +103,7 @@ def train():
 
   ## preparing test data
   print(np.shape(test_set.images))
-  test_data, test_labels = test_set.images[0:200], test_set.labels[0:200]
+  test_data, test_labels = test_set.images, test_set.labels
 
   ### normalize
   test_data = np.subtract(test_data,np.mean(test_data, 0))

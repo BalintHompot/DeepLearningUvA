@@ -98,10 +98,8 @@ class SoftMaxModule(object):
 
     d = self.derivative(self.lastActivity)
     dx = []
-    print(np.shape(dout))
-    print(np.shape(d))
 
-    np.einsum("bi, bij -> bj", [dout, d])
+    dx = np.einsum("bi, bij -> bj", dout, d)
 
     return dx
 
@@ -110,14 +108,9 @@ class SoftMaxModule(object):
     d = []
     for instanceInd in range(len(x)):
       d.append([])
-      for ind in range(len(x[instanceInd])):
-        d[instanceInd].append([])
-        for act in range(len(x[instanceInd])):
-          if ind == act:
-            d[instanceInd][ind].append((x[instanceInd][ind]*(1-x[instanceInd][act])))
-          else:
-            d[instanceInd][ind].append((x[instanceInd][ind]*(-x[instanceInd][act])))
-        
+      s = x[instanceInd].reshape(-1,1)
+      d[instanceInd] = np.diagflat(s) - np.dot(s, s.T)
+
     return d
 
 

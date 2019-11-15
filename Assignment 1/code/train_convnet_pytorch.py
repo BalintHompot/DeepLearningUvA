@@ -19,9 +19,9 @@ from torch.autograd import Variable
 from matplotlib import pyplot as plt
 
 # Default constants
-LEARNING_RATE_DEFAULT = 1e-3
-BATCH_SIZE_DEFAULT = 64
-MAX_STEPS_DEFAULT = 10
+LEARNING_RATE_DEFAULT = 1e-5
+BATCH_SIZE_DEFAULT = 16
+MAX_STEPS_DEFAULT = 30
 EVAL_FREQ_DEFAULT = 500
 OPTIMIZER_DEFAULT = 'ADAM'
 

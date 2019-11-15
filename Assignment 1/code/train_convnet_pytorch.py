@@ -63,7 +63,8 @@ def train():
   criterion = torch.nn.CrossEntropyLoss()
 
   ## preparing test data
-  test_data, test_labels = test_set.images[0:200], test_set.labels[0:200]
+  print(np.shape(test_set.images))
+  test_data, test_labels = test_set.images, test_set.labels
   ### normalize
   test_data = np.subtract(test_data,np.mean(test_data, 0))
   test_data = np.divide(test_data, np.amax(test_data, 0))
@@ -71,14 +72,12 @@ def train():
   test_labels_class = np.argmax(test_labels, 1)
 
   X_test, Y_test = Variable(torch.Tensor(test_data)), Variable(torch.Tensor(test_labels_class))
-  
   if torch.cuda.is_available():
     X_test = X_test.cuda()
-    Y_test = Y_test.cuda()
+    Y_test = Y_test.cuda()  
   
   training_accuracies = []
   test_accuracies = []
-
   training_losses = []
   test_losses = []
   ## training loop
@@ -140,6 +139,11 @@ def train():
     epoch_acc += acc
     epoch_loss += loss
     batchCounter += 1
+
+    ## freeing
+    if torch.cuda.is_available():
+      del X
+      del Y
 
   drawPlot(training_accuracies, test_accuracies, './cnn-accuracies.png', 'ConvNet - accuracies on training and test data', 3)
   drawPlot(training_losses, test_losses, './cnn-loss_numpy.png', 'ConvNet - loss on training and test data', 4)

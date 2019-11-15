@@ -40,12 +40,15 @@ def calculateTest(test_data_cpu, test_labels_cpu, numBatches, classifier, criter
   total_acc = 0
 
   for batch in range(numBatches):
-    X_test,Y_test = test_data_cpu[startInd:endInd], test_labels_onehot[startInd:endInd]
+    X_test = test_data_cpu[startInd:endInd]
     if torch.cuda.is_available():
-      X_test,Y_test = X_test.cuda(), Y_test.cuda()
+      X_test = X_test.cuda()
     test_output = classifier(X_test)
     test_out_np = test_output.cpu().detach().numpy()
     if lossCalc:
+      Y_test = test_labels_onehot[startInd:endInd]
+      if torch.cuda.is_available():
+        Y_test = Y_test.cuda()
       test_loss = criterion(test_output, Y_test.long())
     test_acc = accuracy(test_out_np, test_labels_cpu[startInd:endInd])
     startInd = endInd

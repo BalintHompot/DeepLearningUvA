@@ -76,8 +76,7 @@ def train():
   if torch.cuda.is_available():
     X_test = X_test.cuda()
     Y_test = Y_test.cuda()  
-  
-  print("test set moved to gpu")
+    print("test set added to gpu")
   training_accuracies = []
   test_accuracies = []
   training_losses = []
@@ -129,6 +128,7 @@ def train():
     if torch.cuda.is_available():
       X = X.cuda()
       Y = Y.cuda()
+      print("train batch added to gpu")
     
     optimizer.zero_grad()
     outputs = cnn(X)
@@ -141,6 +141,10 @@ def train():
     epoch_acc += acc
     epoch_loss += loss
     batchCounter += 1
+
+    X.detach()
+    Y.detach()
+    loss.detach()
 
   drawPlot(training_accuracies, test_accuracies, './cnn-accuracies.png', 'ConvNet - accuracies on training and test data', 3)
   drawPlot(training_losses, test_losses, './cnn-loss_numpy.png', 'ConvNet - loss on training and test data', 4)

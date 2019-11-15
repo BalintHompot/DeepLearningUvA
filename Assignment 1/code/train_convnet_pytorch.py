@@ -160,8 +160,9 @@ def train():
     
     optimizer.zero_grad()
     outputs = cnn(X)
-    loss = criterion(outputs, Y.long()).data.item()
+    loss = criterion(outputs, Y.long())
     loss.backward()
+    loss = criterion(outputs, Y.long()).data.item()
     optimizer.step()
     outputs = outputs.cpu().detach().numpy()
 

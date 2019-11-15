@@ -57,7 +57,8 @@ def calculateTest(test_data_cpu, test_labels_cpu, numBatches, classifier, criter
     total_loss += test_loss
 
     X_test.detach()
-    Y_test.detach()
+    if lossCalc:
+      Y_test.detach()
 
 
   return total_acc/numBatches, total_loss/numBatches

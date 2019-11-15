@@ -1,0 +1,18 @@
+learning_rate : 0.0001
+max_steps : 50
+batch_size : 32
+eval_freq : 500
+data_dir : ./cifar10/cifar-10-batches-py
+--------------Convnet initialized------------
+(10000, 3, 32, 32)
+Traceback (most recent call last):
+  File "train_convnet_pytorch.py", line 212, in <module>
+    main()
+  File "train_convnet_pytorch.py", line 195, in main
+    train()
+  File "train_convnet_pytorch.py", line 135, in train
+    calculateTest(X_test, test_labels, 20, cnn, printing=True, lossCalc=False)
+  File "train_convnet_pytorch.py", line 36, in calculateTest
+    batchLen = int(np.shape(test_data_cpu.images)[0]/numBatches)
+AttributeError: 'Tensor' object has no attribute 'images'
+srun: error: r31n5: task 0: Exited with exit code 1

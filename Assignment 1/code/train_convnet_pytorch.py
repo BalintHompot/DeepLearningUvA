@@ -33,7 +33,7 @@ FLAGS = None
 def calculateTest(test_data_cpu, test_labels_cpu, numBatches, classifier, criterion = None, printing = False, lossCalc = True, test_labels_onehot = None):
   
   startInd = 0
-  batchLen = int(np.shape(test_data_cpu.images)[0]/numBatches)
+  batchLen = int(np.shape(test_data_cpu)[0]/numBatches)
   endInd = batchLen
   test_loss = 0
   total_loss = 0

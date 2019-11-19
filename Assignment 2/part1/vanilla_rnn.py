@@ -31,4 +31,4 @@ class VanillaRNN(nn.Module):
 
     def forward(self, x):
         # Implementation here ...
-        pass
+        print("test")

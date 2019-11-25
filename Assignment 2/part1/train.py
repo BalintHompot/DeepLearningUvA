@@ -22,6 +22,7 @@ import argparse
 import time
 from datetime import datetime
 import numpy as np
+from accuracies import accuracy, drawPlot
 
 import torch
 from torch.utils.data import DataLoader
@@ -30,6 +31,9 @@ import torch.optim as optim
 from dataset import PalindromeDataset
 from vanilla_rnn import VanillaRNN
 from lstm import LSTM
+
+import multiprocessing
+multiprocessing.set_start_method('spawn', True)
 
 # You may want to look into tensorboard for logging
 # from torch.utils.tensorboard import SummaryWriter
@@ -43,17 +47,23 @@ def train(config):
     device = torch.device(config.device)
 
     # Initialize the model that we are going to use
-    model = VanillaRNN(config.input_length+1, config.input_dim, config.num_hidden, config.num_classes, device)  
+    if config.model_type == 'RNN':
+        model = VanillaRNN(config.input_length+1, config.input_dim, config.num_hidden, config.num_classes, device)  
+    elif config.model_type == 'LSTM':
+        model = LSTM(config.input_length+1, config.input_dim, config.num_hidden, config.num_classes, device)
+    else:
+        print("Unknown model type, please use RNN or LSTM")
+        exit()  
+
 
     # Initialize the dataset and data loader (note the +1)
     dataset = PalindromeDataset(config.input_length+1)
     data_loader = DataLoader(dataset, config.batch_size, num_workers=1)
 
-    
-
     # Setup the loss and optimizer
     criterion = torch.nn.CrossEntropyLoss()
-    optimizer = optim.SGD(model.parameters(), lr=config.learning_rate)
+    optimizer = optim.Adam(model.parameters(), lr=config.learning_rate)
+    accuracies = []
 
     for step, (batch_inputs, batch_targets) in enumerate(data_loader):
 
@@ -71,13 +81,15 @@ def train(config):
 
         optimizer.zero_grad()
         outputs = model(batch_inputs)
+        print(outputs.size())
         loss = criterion(outputs, batch_targets)
         loss.backward()
         loss = loss.data.item()
         optimizer.step()
         outputs = outputs.cpu().detach().numpy()
 
-        accuracy = 0.0  # fixme
+        acc = accuracy(outputs, batch_targets.cpu().detach().numpy())
+        accuracies.append(acc)
 
         # Just for time measurement
         t2 = time.time()
@@ -89,7 +101,7 @@ def train(config):
                   "Accuracy = {:.2f}, Loss = {:.3f}".format(
                     datetime.now().strftime("%Y-%m-%d %H:%M"), step,
                     config.train_steps, config.batch_size, examples_per_second,
-                    accuracy, loss
+                    acc, loss
             ))
 
         if step == config.train_steps:
@@ -98,6 +110,7 @@ def train(config):
             break
 
     print('Done training.')
+    drawPlot(accuracies, './' + str(config.model_type) + '_len:' + str(config.input_length) + '_lr:'+str(config.learning_rate)  + '_acc.jpg', "Accuracies for palindrome length "+ str(config.input_length) +" with " + str(config.model_type), 1)
 
 
  ################################################################################
@@ -109,13 +122,13 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     # Model params
-    parser.add_argument('--model_type', type=str, default="RNN", help="Model type, should be 'RNN' or 'LSTM'")
-    parser.add_argument('--input_length', type=int, default=3, help='Length of an input sequence')
+    parser.add_argument('--model_type', type=str, default="LSTM", help="Model type, should be 'RNN' or 'LSTM'")
+    parser.add_argument('--input_length', type=int, default=20, help='Length of an input sequence')
     parser.add_argument('--input_dim', type=int, default=1, help='Dimensionality of input sequence')
     parser.add_argument('--num_classes', type=int, default=10, help='Dimensionality of output sequence')
     parser.add_argument('--num_hidden', type=int, default=25, help='Number of hidden units in the model')
     parser.add_argument('--batch_size', type=int, default=128, help='Number of examples to process in a batch')
-    parser.add_argument('--learning_rate', type=float, default=0.0001, help='Learning rate')
+    parser.add_argument('--learning_rate', type=float, default=0.01, help='Learning rate')
     parser.add_argument('--train_steps', type=int, default=10000, help='Number of training steps')
     parser.add_argument('--max_norm', type=float, default=10.0)
     parser.add_argument('--device', type=str, default="cuda:0", help="Training device 'cpu' or 'cuda:0'")

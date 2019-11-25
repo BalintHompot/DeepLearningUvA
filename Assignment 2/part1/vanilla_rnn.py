@@ -20,7 +20,6 @@ from __future__ import print_function
 
 import torch
 import torch.nn as nn
-import numpy as np
 
 ################################################################################
 
@@ -28,10 +27,10 @@ class VanillaRNN(nn.Module):
 
     def __init__(self, seq_length, input_dim, num_hidden, num_classes, device='cpu'):
         super(VanillaRNN, self).__init__()
-        self.inWeights = nn.Parameter(torch.nn.init.normal_(torch.empty( input_dim, num_hidden), 0, 0.0001).to(device))
-        self.hiddenWeights =  nn.Parameter(torch.nn.init.normal_(torch.empty(num_hidden, num_hidden), 0, 0.0001).to(device))
+        self.inWeights = nn.Parameter(torch.nn.init.normal_(torch.empty( input_dim, num_hidden), 0, 0.5).to(device))
+        self.hiddenWeights =  nn.Parameter(torch.nn.init.normal_(torch.empty(num_hidden, num_hidden), 0, 0.5).to(device))
         self.hiddenBias = nn.Parameter(torch.zeros(num_hidden).to(device))
-        self.outWeights = nn.Parameter(torch.nn.init.normal_(torch.empty( num_hidden, num_classes), 0, 0.0001).to(device))
+        self.outWeights = nn.Parameter(torch.nn.init.normal_(torch.empty( num_hidden, num_classes), 0, 0.5).to(device))
         self.outBias = nn.Parameter(torch.zeros(num_classes).to(device))
         self.seq_length = seq_length
         self.hidden_size = num_hidden
@@ -49,4 +48,3 @@ class VanillaRNN(nn.Module):
         ## we don't need in this case to calc out at every step, but in general it could be useful
         out = torch.mm(hiddenActivity , self.outWeights) + self.outBias
         return out
-

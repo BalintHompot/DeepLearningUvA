@@ -31,6 +31,7 @@ from torch.utils.data import DataLoader
 from dataset import TextDataset
 from model import TextGenerationModel
 from accuracies import accuracy
+from genText import generate_text
 
 ################################################################################
 
@@ -46,7 +47,7 @@ def train(config):
     data_loader = DataLoader(dataset, config.batch_size, num_workers=1)
 
     # Initialize the model that we are going to use
-    model = TextGenerationModel(config.batch_size, config.seq_length, dataset.vocab_size, lstm_num_layers=2, device=device) 
+    model = TextGenerationModel(config.batch_size, config.seq_length, dataset.vocab_size, lstm_num_layers=2, device=device, temperature=1) 
 
     # Setup the loss and optimizer
     criterion = torch.nn.CrossEntropyLoss()
@@ -81,7 +82,7 @@ def train(config):
         loss = loss.data.item()
         optimizer.step()
         outputs = outputs.cpu().detach().numpy()
-        
+
 
         acc = accuracy(outputs, batch_targets.cpu().detach().numpy())
         accuracies.append(acc)
@@ -101,15 +102,17 @@ def train(config):
                     acc, loss
             ))
 
-        if step == config.sample_every:
-            # Generate some sentences by sampling from the model
-            pass
+        if step % config.sample_every == 0:
+            max_indices = np.argmax(outputs, axis= 1)
+            print(dataset.convert_to_string(max_indices))
 
         if step == config.train_steps:
             # If you receive a PyTorch data-loader error, check this bug report:
             # https://github.com/pytorch/pytorch/pull/9655
             break
 
+    if config.generate_text:
+        generate_text(model, dataset,  300, device)           
     print('Done training.')
 
 
@@ -136,13 +139,17 @@ if __name__ == "__main__":
     parser.add_argument('--learning_rate_step', type=int, default=5000, help='Learning rate step')
     parser.add_argument('--dropout_keep_prob', type=float, default=1.0, help='Dropout keep probability')
 
-    parser.add_argument('--train_steps', type=int, default=1e6, help='Number of training steps')
+    parser.add_argument('--train_steps', type=int, default=1e3, help='Number of training steps')
     parser.add_argument('--max_norm', type=float, default=5.0, help='--')
 
     # Misc params
     parser.add_argument('--summary_path', type=str, default="./summaries/", help='Output path for summaries')
     parser.add_argument('--print_every', type=int, default=5, help='How often to print training progress')
     parser.add_argument('--sample_every', type=int, default=100, help='How often to sample from the model')
+
+
+    # added param for text generation
+    parser.add_argument('--generate_text', type=bool, default=True, help='Generate text after training using one letter')
 
     config = parser.parse_args()
 

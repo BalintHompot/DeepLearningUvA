@@ -30,7 +30,7 @@ from torch.utils.data import DataLoader
 
 from dataset import TextDataset
 from model import TextGenerationModel
-from accuracies import accuracy
+from accuracies import accuracy, drawPlot
 from genText import generate_text
 
 ################################################################################
@@ -47,11 +47,11 @@ def train(config):
     data_loader = DataLoader(dataset, config.batch_size, num_workers=1)
 
     # Initialize the model that we are going to use
-    model = TextGenerationModel(config.batch_size, config.seq_length, dataset.vocab_size, lstm_num_layers=2, device=device, temperature=1) 
+    model = TextGenerationModel(config.batch_size, config.seq_length, dataset.vocab_size, lstm_num_layers=2, device=device, temperature=config.temperature) 
 
     # Setup the loss and optimizer
     criterion = torch.nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr=config.learning_rate)
+    optimizer = optim.RMSprop(model.parameters(), lr=config.learning_rate)
     accuracies = []
 
     batch_size = config.batch_size
@@ -90,17 +90,20 @@ def train(config):
         # Just for time measurement
         t2 = time.time()
         examples_per_second = config.batch_size/float(t2-t1)
-        print("------")
-        print(acc)
-        print(loss)
-        if False:
+
+        if step % config.print_every == 0:
 
             print("[{}] Train Step {:04d}/{:04d}, Batch Size = {}, Examples/Sec = {:.2f}, "
                   "Accuracy = {:.2f}, Loss = {:.3f}".format(
-                    datetime.now().strftime("%Y-%m-%d %H:%M"), step,
-                    config.train_steps, config.batch_size, examples_per_second,
-                    acc, loss
+                    datetime.now().strftime("%Y-%m-%d %H:%M"),
+                    int(step),
+                    int(config.train_steps), 
+                    config.batch_size, 
+                    examples_per_second,
+                    acc,
+                    loss
             ))
+
 
         if step % config.sample_every == 0:
             max_indices = np.argmax(outputs, axis= 1)
@@ -112,8 +115,10 @@ def train(config):
             break
 
     if config.generate_text:
-        generate_text(model, dataset,  300, device)           
+        generate_text(model, dataset,  config.len_generation, device, stochastic=config.stochastic)           
+
     print('Done training.')
+    drawPlot(accuracies, './LSTM_len:' +  '_lr:'+str(config.learning_rate)  + '_acc_text.jpg', "Accuracies on the next character with LSTM" , 1)
 
 
  ################################################################################
@@ -132,14 +137,14 @@ if __name__ == "__main__":
 
     # Training params
     parser.add_argument('--batch_size', type=int, default=64, help='Number of examples to process in a batch')
-    parser.add_argument('--learning_rate', type=float, default=5e-3, help='Learning rate')
+    parser.add_argument('--learning_rate', type=float, default=2e-3, help='Learning rate')
 
     # It is not necessary to implement the following three params, but it may help training.
     parser.add_argument('--learning_rate_decay', type=float, default=0.96, help='Learning rate decay fraction')
     parser.add_argument('--learning_rate_step', type=int, default=5000, help='Learning rate step')
     parser.add_argument('--dropout_keep_prob', type=float, default=1.0, help='Dropout keep probability')
 
-    parser.add_argument('--train_steps', type=int, default=1e3, help='Number of training steps')
+    parser.add_argument('--train_steps', type=int, default=1e6, help='Number of training steps')
     parser.add_argument('--max_norm', type=float, default=5.0, help='--')
 
     # Misc params
@@ -148,8 +153,11 @@ if __name__ == "__main__":
     parser.add_argument('--sample_every', type=int, default=100, help='How often to sample from the model')
 
 
-    # added param for text generation
+    # added params for text generation
     parser.add_argument('--generate_text', type=bool, default=True, help='Generate text after training using one letter')
+    parser.add_argument('--len_generation', type=int, default=300, help='Length of generated text in characters')
+    parser.add_argument('--temperature', type=float, default=1, help='Temperature for logit distribution')
+    parser.add_argument('--stochastic', type=bool, default=True, help='Select the max probability, or sample stochastically from output')
 
     config = parser.parse_args()
 

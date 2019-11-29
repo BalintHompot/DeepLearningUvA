@@ -21,6 +21,7 @@ from __future__ import print_function
 import torch
 import torch.nn as nn
 import numpy as np
+from torch.autograd import Variable
 
 ################################################################################
 
@@ -49,12 +50,14 @@ class LSTM(nn.Module):
         self.seq_length = seq_length
         self.hidden_size = num_hidden
         self.device = device
+        self.store_hidden = False
+        self.hiddenActivity = [None] * (seq_length-1)
+
 
     def forward(self, x):
         batchSize = x.size()[0]
-        hiddenActivity = torch.zeros(batchSize, self.hidden_size).to(self.device)
         state = torch.zeros(batchSize, self.hidden_size).to(self.device)
-
+        hiddenActivity = torch.zeros(batchSize, self.hidden_size).to(self.device)
         x = x.T
         for timeStep in range(self.seq_length-1):
             inp = x[timeStep].reshape(-1,1)
@@ -65,6 +68,9 @@ class LSTM(nn.Module):
 
             state = g*i + state*f
             hiddenActivity = torch.tanh(state) * o
+            if self.store_hidden:
+                self.hiddenActivity[timeStep]=hiddenActivity
+                self.hiddenActivity[timeStep].retain_grad()
         ## we don't need in this case to calc out at every step, but in general it could be useful
         out = torch.mm(hiddenActivity , self.outWeights) + self.outBias
         return out

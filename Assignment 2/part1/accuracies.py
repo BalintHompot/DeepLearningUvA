@@ -14,6 +14,18 @@ def drawPlot(trainAcc, savePath, title, figNum):
     plt.savefig(savePath)
     return plt
 
+def drawPlotMagn(trainAcc, savePath, title, figNum):
+    plt.figure(figNum)
+    plt.plot(trainAcc)
+
+    plt.xlabel('time step')
+    plt.ylabel('gradient magnitude')
+    plt.title(title)
+    plt.legend(['Training'])
+
+    plt.savefig(savePath)
+    return plt
+
 
 def accuracy(predictions, targets):
   """

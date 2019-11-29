@@ -35,6 +35,8 @@ class VanillaRNN(nn.Module):
         self.seq_length = seq_length
         self.hidden_size = num_hidden
         self.device = device
+        self.store_hidden = False
+        self.hiddenActivity = [None] * (seq_length-1)
 
     def forward(self, x):
         batchSize = x.size()[0]
@@ -44,7 +46,9 @@ class VanillaRNN(nn.Module):
             newIn = torch.matmul(x[timeStep].reshape(-1,1), self.inWeights)
             recurrent = torch.mm(hiddenActivity, self.hiddenWeights)
             hiddenActivity = torch.tanh(newIn + recurrent + self.hiddenBias) 
-
+            if self.store_hidden:
+                self.hiddenActivity[timeStep]=hiddenActivity
+                self.hiddenActivity[timeStep].retain_grad()
         ## we don't need in this case to calc out at every step, but in general it could be useful
         out = torch.mm(hiddenActivity , self.outWeights) + self.outBias
         return out

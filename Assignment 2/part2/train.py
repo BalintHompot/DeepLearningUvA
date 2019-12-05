@@ -150,14 +150,14 @@ if __name__ == "__main__":
     # Misc params
     parser.add_argument('--summary_path', type=str, default="./summaries/", help='Output path for summaries')
     parser.add_argument('--print_every', type=int, default=5, help='How often to print training progress')
-    parser.add_argument('--sample_every', type=int, default=100, help='How often to sample from the model')
+    parser.add_argument('--sample_every', type=int, default=4000, help='How often to sample from the model')
 
 
     # added params for text generation
     parser.add_argument('--generate_text', type=bool, default=True, help='Generate text after training using one letter')
-    parser.add_argument('--len_generation', type=int, default=300, help='Length of generated text in characters')
+    parser.add_argument('--len_generation', type=int, default=30, help='Length of generated text in characters')
     parser.add_argument('--temperature', type=float, default=1, help='Temperature for logit distribution')
-    parser.add_argument('--stochastic', type=bool, default=True, help='Select the max probability, or sample stochastically from output')
+    parser.add_argument('--stochastic', type=bool, default=False, help='Select the max probability, or sample stochastically from output')
 
     config = parser.parse_args()
 
